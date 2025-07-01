@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Cadastro de Peças</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f4f8;
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .open-popup-btn {
+      padding: 12px 20px;
+      background-color: #2c5f7d;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .popup-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+      z-index: 1000;
+    }
+
+    .popup-container.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .popup {
+      background-color: #e6edf3;
+      padding: 20px;
+      border-radius: 16px;
+      width: 320px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      transform: scale(0.95);
+      opacity: 0;
+      transition: all 0.3s ease;
+      box-sizing: border-box;
+    }
+
+    .popup-container.active .popup {
+      transform: scale(1);
+      opacity: 1;
+    }
+
+    .popup-header {
+      background-color: #2c5f7d;
+      color: white;
+      padding: 12px;
+      border-radius: 12px 12px 0 0;
+      font-size: 18px;
+      text-align: center;
+      margin: -20px -20px 20px -20px;
+    }
+
+    .popup input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 12px;
+      border: none;
+      border-radius: 8px;
+      background-color: #4a7593;
+      color: white;
+      font-size: 14px;
+      box-sizing: border-box;
+    }
+
+    .popup input::placeholder {
+      color: #d1e0eb;
+    }
+
+    .popup .row {
+      display: flex;
+      gap: 8px;
+    }
+
+    .popup .row > * {
+      flex: 1;
+    }
+
+    .popup-buttons {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .popup-buttons button {
+      flex: 1;
+      margin: 0 5px;
+      padding: 10px 0;
+      border: none;
+      border-radius: 8px;
+      color: white;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .cancel-btn {
+      background-color: #3c5f7d;
+    }
+
+    .submit-btn {
+      background-color: #2c5f7d;
+    }
+  </style>
+</head>
+<body>
+
+  <button class="open-popup-btn" onclick="openPopup()">Cadastrar peças</button>
+
+  <div class="popup-container" id="popupContainer">
+    <div class="popup">
+      <div class="popup-header">Cadastro de peças</div>
+
+      <input type="text" placeholder="Nome" id="nome">
+
+      <div class="row">
+        <input type="text" placeholder="Modelo" id="modelo">
+        <input type="number" placeholder="Estoque" id="estoque">
+      </div>
+
+      <input type="text" placeholder="Distribuidor" id="distribuidor">
+
+      <div class="row">
+        <input type="date" placeholder="Data de aquisição" id="dataAquisicao">
+        <input type="text" placeholder="Garantia" id="garantia">
+      </div>
+
+      <div class="row">
+        <input type="text" placeholder="Observação" id="observacao">
+        <input type="text" placeholder="R$" id="preco" pattern="\d+([.,]\d{1,2})?" title="Informe um valor numérico">
+      </div>
+
+      <div class="popup-buttons">
+        <button class="cancel-btn" onclick="closePopup()">Cancelar</button>
+        <button class="submit-btn" onclick="submitForm()">Cadastrar</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const popupContainer = document.getElementById('popupContainer');
+
+    function openPopup() {
+      popupContainer.classList.add('active');
+    }
+
+    function closePopup() {
+      clearFields();
+      popupContainer.classList.remove('active');
+    }
+
+    function submitForm() {
+      const precoRaw = document.getElementById('preco').value.trim();
+      const preco = parseFloat(precoRaw.replace(',', '.')) || 0;
+
+      const data = {
+        nome: document.getElementById('nome').value.trim(),
+        modelo: document.getElementById('modelo').value.trim(),
+        estoque: document.getElementById('estoque').value.trim(),
+        distribuidor: document.getElementById('distribuidor').value.trim(),
+        dataAquisicao: document.getElementById('dataAquisicao').value.trim(),
+        garantia: document.getElementById('garantia').value.trim(),
+        observacao: document.getElementById('observacao').value.trim(),
+        preco: preco
+      };
+
+      console.log("Peça cadastrada:", data);
+      alert("Peça cadastrada com sucesso!");
+
+      closePopup();
+    }
+
+    function clearFields() {
+      document.getElementById('nome').value = "";
+      document.getElementById('modelo').value = "";
+      document.getElementById('estoque').value = "";
+      document.getElementById('distribuidor').value = "";
+      document.getElementById('dataAquisicao').value = "";
+      document.getElementById('garantia').value = "";
+      document.getElementById('observacao').value = "";
+      document.getElementById('preco').value = "";
+    }
+
+    window.addEventListener('click', function(event) {
+      if (event.target === popupContainer) {
+        closePopup();
+      }
+    });
+  </script>
+
+</body>
+</html>
