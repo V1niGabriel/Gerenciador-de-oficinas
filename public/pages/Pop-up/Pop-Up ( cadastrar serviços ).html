@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Cadastro de Serviços</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f4f8;
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .open-popup-btn {
+      padding: 12px 20px;
+      background-color: #2c5f7d;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .popup-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+
+    .popup-container.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .popup {
+      background-color: #e6edf3;
+      padding: 20px;
+      border-radius: 16px;
+      width: 300px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      transform: scale(0.95);
+      opacity: 0;
+      transition: all 0.3s ease;
+      box-sizing: border-box;
+    }
+
+    .popup-container.active .popup {
+      transform: scale(1);
+      opacity: 1;
+    }
+
+    .popup-header {
+      background-color: #2c5f7d;
+      color: white;
+      padding: 12px;
+      border-radius: 12px 12px 0 0;
+      font-size: 18px;
+      text-align: center;
+      margin: -20px -20px 20px -20px;
+    }
+
+    .popup input,
+    .popup textarea {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 12px;
+      border: none;
+      border-radius: 8px;
+      background-color: #4a7593;
+      color: white;
+      font-size: 14px;
+      box-sizing: border-box;
+    }
+
+    .popup input::placeholder,
+    .popup textarea::placeholder {
+      color: #d1e0eb;
+    }
+
+    .popup-buttons {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .popup-buttons button {
+      flex: 1;
+      margin: 0 5px;
+      padding: 10px 0;
+      border: none;
+      border-radius: 8px;
+      color: white;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .cancel-btn {
+      background-color: #3c5f7d;
+    }
+
+    .submit-btn {
+      background-color: #2c5f7d;
+    }
+  </style>
+</head>
+<body>
+
+  <button class="open-popup-btn" onclick="openPopup()">Cadastrar serviços</button>
+
+  <div class="popup-container" id="popupContainer">
+    <div class="popup">
+      <div class="popup-header">Cadastro de serviços</div>
+
+      <div style="display: flex; gap: 8px;">
+        <input type="text" placeholder="Nome" id="nome" style="flex: 1;">
+      </div>
+
+      <div style="display: flex; gap: 8px;">
+        <input type="text" placeholder="Tipo" id="tipo" style="flex: 1;">
+        <input type="text" placeholder="Duração" id="duracao" style="flex: 1;">
+        <input type="text" placeholder="Preço" id="preco" style="flex: 1;">
+      </div>
+
+      <div style="display: flex; gap: 8px;">
+        <textarea placeholder="Observação" id="observacao" style="flex: 1;"></textarea>
+      </div>
+
+      <div class="popup-buttons">
+        <button class="cancel-btn" onclick="closePopup()">Cancelar</button>
+        <button class="submit-btn" onclick="submitForm()">Cadastrar</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const popupContainer = document.getElementById('popupContainer');
+
+    function openPopup() {
+      popupContainer.classList.add('active');
+    }
+
+    function closePopup() {
+      clearFields();
+      popupContainer.classList.remove('active');
+    }
+
+    function submitForm() {
+      const nome = document.getElementById('nome').value.trim();
+      const tipo = document.getElementById('tipo').value.trim();
+      const duracao = document.getElementById('duracao').value.trim();
+      const preco = document.getElementById('preco').value.trim();
+      const observacao = document.getElementById('observacao').value.trim();
+
+      if (!nome || !tipo) {
+        alert('Preencha pelo menos o Nome e o Tipo do serviço.');
+        return;
+      }
+
+      console.log("Serviço cadastrado:");
+      console.log("Nome:", nome);
+      console.log("Tipo:", tipo);
+      console.log("Duração:", duracao);
+      console.log("Preço:", preco);
+      console.log("Observação:", observacao);
+
+      alert("Serviço cadastrado com sucesso!");
+
+      closePopup(); // também limpa os campos
+    }
+
+    function clearFields() {
+      document.getElementById('nome').value = "";
+      document.getElementById('tipo').value = "";
+      document.getElementById('duracao').value = "";
+      document.getElementById('preco').value = "";
+      document.getElementById('observacao').value = "";
+    }
+
+    window.addEventListener('click', function(event) {
+      if (event.target === popupContainer) {
+        closePopup();
+      }
+    });
+  </script>
+
+</body>
+</html>
