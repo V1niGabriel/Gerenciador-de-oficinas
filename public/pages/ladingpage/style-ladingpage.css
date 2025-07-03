@@ -1,0 +1,346 @@
+/* Reset e variáveis */
+* { margin:0; padding:0; box-sizing:border-box; }
+:root {
+  --bg: #fff;
+  --primary: #007bff;
+  --text: #333;
+  --bg-panel: #fafafa;
+}
+
+/* Corpo */
+body {
+  font-family: "Montserrat", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
+  background: var(--bg-panel);
+  color: var(--text);
+  scroll-behavior: smooth;
+}
+
+#contato {
+  scroll-margin-top: 100px; /* ajuste conforme altura do seu cabeçalho */
+}
+
+#servicos, #sobre {
+  scroll-margin-top: 220px; /* Ajuste se seu cabeçalho for mais ou menos alto */
+}
+
+/* Header */
+.cabecalho {
+  position:sticky; top:0; left:0; width:100%;
+  background: var(--bg);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  z-index:100;
+}
+.navegacao {
+  max-width:1200px;
+  margin:auto;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:1rem;
+  position:relative;
+}
+.logo { max-height:150px; }
+
+/* Menu principal */
+.menu {
+  display:flex;
+  gap:1rem;
+}
+.menu a {
+  text-decoration:none;
+  color: var(--text);
+  font-weight:500;
+  transition: color .3s;
+  font-family: "Montserrat", sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+}
+.menu a:hover { color: var(--primary); }
+
+/* Botão Área do Cliente */
+.botao {
+  background:#355c7d;
+  color:#fff;
+  border:none;
+  padding:0.6rem 1.2rem;
+  border-radius:4px;
+  cursor:pointer;
+  transition: background .3s;
+}
+
+.botao {
+  font-family: "Montserrat", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
+}
+
+
+.botao:hover { background:#f9a825; 
+}
+
+.botaoh {
+  background:#355c7d;
+  color:#fff;
+  border:none;
+  padding:0.6rem 1.2rem;
+  border-radius:4px;
+  cursor:pointer;
+  transition: background .3s;
+}
+
+.botaoh {
+  font-family: "Montserrat", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
+}
+
+
+.botaoh:hover { background:#f9a825; 
+}
+
+/* Hero */
+.hero {
+  text-align:center;
+  padding:6rem 1rem 4rem;
+  background: var(--bg);
+}
+
+.hero h2 { 
+  color: var(--primary); font-size: 4rem;
+  font-family: "Montserrat", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
+ }
+ 
+.hero h1 { font-size:2.5rem; margin:1rem 0; }
+.hero img { max-width:100%; width:400px; height:auto; margin:2rem 0; }
+.hero p { font-size:1.2rem; }
+
+/* Seções */
+.secao {
+  max-width:800px;
+  margin:4rem auto;
+  padding:0 1rem;
+  text-align:center;
+}
+
+.secao h2 { color: var(--primary); font-size:2rem; margin-bottom:1rem; }
+.secao + .secao { border-top:1px solid #eee; padding-top:3rem; }
+
+ .footer {
+  background-color: #fafafa; /* Cor diferente para destaque */
+  color: #fff;
+  padding: 3rem 1rem;
+  text-align: center;
+}
+
+.footer-content {
+  max-width: 1000px;        /* Limita a largura como um container */
+  margin: 0 auto;           /* Centraliza horizontalmente */
+  background-color: #355c7d;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+}
+
+.footer a {
+  color: #fff;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.footer a:hover {
+  color: #f9a825;
+}
+
+.footer h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.footer p {
+  margin: 0.5rem 0;
+  font-size: 1rem;
+}
+
+.footer .social {
+  margin-top: 1.5rem;
+  display: flex;
+  justify-content: center;
+  gap: 1.2rem;
+}
+
+.footer .social img {
+  width: 36px;
+  height: 36px;
+  transition: transform 0.2s ease-in-out;
+}
+
+.footer .social img:hover {
+  transform: scale(1.1);
+}
+
+.footer .copyright {
+  margin-top: 2rem;
+  font-size: 0.85rem;
+  opacity: 0.6;
+}
+
+.funcionalidades {
+  max-width: 1200px;
+  margin: 5rem auto;
+  padding: 0 1rem;
+  text-align: center;
+}
+
+.funcionalidades h2 {
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  color: var(--primary);
+}
+
+.blocos {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+}
+
+.bloco {
+  background-color: #355c7d;
+  color: #fff;
+  border-radius: 8px;
+  padding: 2rem;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.bloco:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.3);
+}
+
+.bloco h3 {
+  margin-bottom: 1rem;
+  font-size: 1.3rem;
+  color: #f9a825(216, 100%, 45%);
+}
+
+.bloco p {
+  font-size: 0.95rem;
+  opacity: 0.85;
+}
+
+
+/* --- IGNORE --- */
+
+/* Hamburger mobile */
+#menu-checkbox { display:none; }
+label.hamburger {
+  display:none;
+  flex-direction:column;
+  gap:5px;
+  cursor:pointer;
+}
+label.hamburger span {
+  width:25px; height:3px;
+  background: var(--text);
+  transition: transform .3s, opacity .3s;
+}
+
+.conteudo-servico {
+    display: flex;
+    align-items: center; /* Alinha a imagem e o texto verticalmente */
+    gap: 10px; /* Espaçamento entre a imagem e o texto */
+}
+
+.conteudo-servico img {
+    width: 400px; /* Ajuste o tamanho da imagem conforme quiser */
+    height:max-content;
+}
+
+.texto-servico {
+    max-width: 600px; /* Limita a largura do texto para não ficar muito esticado */
+}
+
+.conteudo-sobre {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.conteudo-sobre img {
+    width: 400px; /* Ajuste o tamanho como quiser */
+    height:max-content;
+}
+
+.texto-sobre {
+    max-width: 600px;
+}
+
+.footer-content {
+  /* animação suave ao aparecer */
+  animation: fadeSlideUp 1s ease-out;
+}
+
+/* Responsividade mobile */
+@media(max-width:768px){
+  .menu, .botao { display:none; }
+  label.hamburger { display:flex; }
+
+  /* Toggle de menu via checkbox */
+  #menu-checkbox:checked ~ .menu {
+    display:flex;
+    flex-direction:column;
+    gap:1rem;
+    position:absolute;
+    top:100%; left:0;
+    background: var(--bg);
+    width:100%;
+    padding:1rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  #menu-checkbox:checked + label.hamburger span:nth-child(1) {
+    transform: rotate(45deg) translate(5px,5px);
+  }
+  #menu-checkbox:checked + label.hamburger span:nth-child(2) {
+    opacity:0;
+  }
+  #menu-checkbox:checked + label.hamburger span:nth-child(3) {
+    transform: rotate(-45deg) translate(5px,-5px);
+  }
+
+ @keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+}
+
+@media (max-width: 768px) {
+   .conteudo-servico,
+   .conteudo-sobre{
+      flex-direction: column;
+      text-align: center;
+   }
+
+   .conteudo-servico img,
+   .conteudo-sobre img {
+      width: 100%;
+      max-width: 300px;
+      margin: 0 auto;
+   }
+
+   .texto-servico,
+   .texto-sobre {
+      max-width: 100%;
+   }
+}
