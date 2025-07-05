@@ -34,13 +34,12 @@ app.post('/singUp', async (req, res) => {
    if (error.code === 'P2002' && error.meta?.target?.includes('email')) {
       return res.status(409).json({message: "Email já está em uso"}); //409 = erro de conflito
    }
-
       //Erro generico de servidor
       return res.status(500).json({message: "erro no servidor"})
   }
 })
 
-//Bloco de verificação de entrada
+//Bloco de verificação de entrada da página de Login
 app.post('/SingIn', async (req, res) => {
    const {email} = req.body
    const pwd = req.body.senha
@@ -72,14 +71,99 @@ app.post('/SingIn', async (req, res) => {
    } catch(error) {
       //Erro generico de servidor
       return res.status(500).json({message: "erro no servidor"})
-  }
+   }   
 })
 
 app.get ('/relatorio', async (req, res) => {
    try{
-      const dados = await prisma.User.findMany()
+      const dados = await prisma.services.findMany()
       res.status(201).json(dados)
    } catch(err){
       res.status(500).json({message: 'erro com o servidor'})
    }
+})
+
+//Bloco da funcionalidade Serviço
+
+//Cadastro 
+app.post('/servico/cadastro', async (req, res) => {
+   const {nome, tipo, preco, observacao} = req.body
+   console.log(req.body)
+   console.log(nome, tipo, preco, observacao)
+
+   try{
+      const dados = await prisma.Services.create({
+         data: {
+            nome: nome,
+            tipo: tipo,
+            preco: preco,
+            observacao: observacao
+         }
+      })
+
+      res.status(201).json(dados)
+   } catch (error){
+      console.error(error);
+      //Erro generico de servidor
+      return res.status(500).json({message: "erro no servidor"})
+   }
+
+})
+
+//Listar todos servicos
+app.get('/servico', async (req, res) => {
+   try {
+      const servicos = await prisma.Services.findMany()
+      res.status(200).json(servicos)
+   } catch (error) {
+      console.error(error)
+      res.status(500).json({message: "Erro no servidor"})
+   }
+})
+
+//Atualização
+app.put('/servico/atualizar/:id', async (req, res) => {
+   const {id} = req.params;
+   const {nome, tipo, preco, observacao} = req.body
+   console.log(id)
+   console.log(nome, tipo, preco, observacao)
+   try{
+      await prisma.Services.update({
+         where: {
+            id: id
+         },
+         data: {
+            nome: nome, 
+            tipo: tipo, 
+            preco: preco, 
+            observacao: observacao
+         }
+      })
+      res.status(201).json({message: "Atualização feita"})
+  } catch (erro) {
+      console.error(erro)
+      res.status(500).json({message: "Erro ao atualizar serviço"})
+  }
+})
+
+//Deletar
+app.delete ('/servicos/deletar/:id', async (req, res) => {
+   const {id} = req.params;
+   try{
+      await prisma.Services.delete({
+         where: {
+            id: id
+         }
+      })
+      res.status(204).json({message: "Usuário deletado"})
+   } catch (erro) {
+      console.erro(erro)
+      res.status(500).json({message: "Erro ao deletar usuário"})
+   }
+})
+
+//Bloco de Funcionalidade Peças
+app.put('/teste', async (req, res) => {
+   console.log(req.query)
+   res.status(200).json({message: "teste"})
 })

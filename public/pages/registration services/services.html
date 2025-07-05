@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cadastro de Serviços</title>
+  <link rel="stylesheet" href="style-servicos.css">
+  <link rel="shortcut icon" type="imagex/png" href="/public/assets/img/logo-Mycar.ico">
+</head>
+<body>
+  <header class="container-options">
+    <div class="options">
+      <div class="left-buttons">
+        <button class="open-popup-btn" onclick="openPopup()">Cadastrar serviço</button>
+        <!--Botão para retornar ao menu-->
+        <button class="menu-btn" onclick="window.location.href='menu.html'"> Menu</button>
+      </div>
+      <div class="logo-right">
+        <img src="/public/assets/img/logomycar1.png"/ alt="logo-Mycar">
+      </div>
+    </div>
+  </header>
+  <div id="cards-container"></div>
+  <div class="popup-container" id="popupContainer">
+    <div class="popup">
+      <div class="popup-header">Cadastro de serviços</div>
+      <input type="text" placeholder="Nome" id="nome" required>
+      <input type="text" placeholder="Tipo" id="tipo">
+      <input type="number" placeholder="Preço" id="preco" required>
+      <textarea placeholder="Observação" id="observacao"></textarea>
+      <div class="popup-buttons">
+        <button type="button" class="cancel-btn" onclick="closePopup()">Cancelar</button>
+        <button type="button" class="submit-btn" onclick="submitForm()">Salvar</button>
+      </div>
+    </div>
+  </div>
+  <!--Alerta visual de Sucesso/erro-->
+  <div id="alertBox" class="alert hidden"></div>
+  <script src="services.js"></script>
+</body>
+</html>

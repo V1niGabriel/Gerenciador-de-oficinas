@@ -16,6 +16,26 @@ datasource db {
 model User {
   id      String   @id @default(auto()) @map("_id") @db.ObjectId
   nome    String
-  email   String   @unique
+  email   String   @unique 
   senha   String
+}
+
+model Services {
+  id          String @id @default(auto()) @map("_id") @db.ObjectId
+  nome        String 
+  tipo        String?
+  preco       Int
+  observacao  String?
+}
+
+model Parts {
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  nome            String
+  modelo          String
+  estoque         Int
+  distribuidor    String?
+  data_de_compra  String?
+  garantia        String?
+  preco           Int
+  observacao      String?
 }

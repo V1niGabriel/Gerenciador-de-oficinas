@@ -20,6 +20,7 @@ body {
 	justify-content: center;
 	font-family: 'Poppins', sans-serif;
 	padding: 20px;
+	scroll-behavior: smooth;
 }
 
 .container {
@@ -359,3 +360,5 @@ p {
     display: none;
   }
 }
+
+
