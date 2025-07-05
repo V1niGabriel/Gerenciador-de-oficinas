@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Home - MyCar Oficina</title>
+
+    <!-- FullCalendar CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.css"
+      rel="stylesheet"
+    />
+
+    <style>
+      :root {
+        --preto: #050505;
+        --cinza: #747474;
+        --branco: #ffffff;
+        --vermelho: #c62828;
+        --azul: #355c7d;
+        --amarelo: #f9a825;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Segoe UI", sans-serif;
+      }
+
+      body {
+        display: flex;
+        height: 100vh;
+        background-color: var(--branco);
+      }
+
+      .sidebar {
+        width: 250px;
+        background-color: var(--branco);
+        color: var(--preto);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 20px;
+        border-right: 1px solid #ddd;
+      }
+
+      .sidebar .logo {
+        text-align: center;
+        margin-bottom: 40px;
+      }
+
+      .sidebar .logo img {
+        max-width: 120px;
+      }
+
+      .sidebar .menu a {
+        display: block;
+        color: var(--branco);
+        text-decoration: none;
+        padding: 12px;
+        border-radius: 12px;
+        margin-bottom: 10px;
+        background-color: var(--azul);
+        text-align: center;
+        transition: background 0.3s;
+      }
+
+      .sidebar .menu a:hover {
+        background-color: #c62828;
+      }
+
+      .user-profile {
+        margin-top: 40px;
+        font-size: 14px;
+        text-align: center;
+        color: var(--branco);
+        padding: 11px;
+        border-radius: 12px;
+        margin-bottom: 10px;
+        background-color: var(--azul);
+      }
+
+      .main-content {
+        flex: 1;
+        padding: 30px;
+        background-color: #f8f8f8;
+        overflow-y: auto;
+      }
+
+      .main-content h1 {
+        font-size: 24px;
+        margin-bottom: 20px;
+        color: var(--preto);
+      }
+
+      #calendar {
+        background-color: var(--branco);
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+      }
+
+      .fc .fc-button-primary {
+        background-color: var(--azul);
+        border: none;
+      }
+
+      .fc .fc-button-primary:hover {
+        background-color: var(--vermelho);
+      }
+
+      .fc-daygrid-event {
+        background-color: var(--amarelo);
+        border: none;
+        color: var(--preto);
+        font-weight: bold;
+      }
+
+      /* Personaliza botões de visualização */
+      .fc-button-group .fc-button {
+        text-transform: capitalize !important;
+      }
+
+      /* Força tradução */
+      .fc-button[data-value="dayGridMonth"]::after {
+        content: "Mês" !important;
+        color: white;
+      }
+      .fc-button[data-value="timeGridWeek"]::after {
+        content: "Semana" !important;
+        color: white;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="sidebar">
+      <div>
+        <div class="logo">
+          <img src="logo.png" alt="Logo MyCar" />
+        </div>
+        <div class="menu">
+          <a href="#">Agendar</a>
+          <a href="#">Cadastro de Serviços</a>
+          <a href="#">Cadastro de Peças</a>
+          <a href="#">Verificar Histórico</a>
+        </div>
+      </div>
+      <div class="user-profile">
+        <p>Miguel Dias<br /><small>jmigueldias14@oficina.com</small></p>
+      </div>
+    </div>
+
+    <div class="main-content">
+      <h1>Calendário de Agendamentos</h1>
+      <div id="calendar"></div>
+    </div>
+
+    <!-- FullCalendar JS -->
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/locales-all.min.js"></script>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const calendarEl = document.getElementById("calendar");
+        const calendar = new FullCalendar.Calendar(calendarEl, {
+          locale: "pt-br",
+          initialView: "dayGridMonth",
+          height: "auto",
+          headerToolbar: {
+            left: "prev,next today",
+            center: "title",
+            right: "dayGridMonth,timeGridWeek",
+          },
+          buttonText: {
+            today: "Hoje",
+            month: "Mês",
+            week: "Semana",
+          },
+          events: [],
+        });
+        calendar.render();
+      });
+    </script>
+  </body>
+</html>
