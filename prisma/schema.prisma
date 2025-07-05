@@ -34,7 +34,7 @@ model Parts {
   modelo          String
   estoque         Int
   distribuidor    String?
-  data_de_compra  String?
+  data            String? //é a data de compra do material
   garantia        String?
   preco           Int
   observacao      String?
