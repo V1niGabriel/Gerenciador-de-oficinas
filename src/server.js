@@ -147,7 +147,7 @@ app.put('/servico/atualizar/:id', async (req, res) => {
 })
 
 //Deletar
-app.delete ('/servicos/deletar/:id', async (req, res) => {
+app.delete ('/servico/deletar/:id', async (req, res) => {
    const {id} = req.params;
    try{
       await prisma.Services.delete({
