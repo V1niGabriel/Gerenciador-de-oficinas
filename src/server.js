@@ -4,6 +4,7 @@ import cors from 'cors'
 import path from 'path'
 import bcrypt from 'bcryptjs'
 import { hash } from 'crypto'
+import { CallTracker } from 'assert'
 
 const prisma = new PrismaClient()
 const app = express()
@@ -83,7 +84,7 @@ app.get ('/relatorio', async (req, res) => {
    }
 })
 
-//Bloco da funcionalidade Serviço
+//BLOCO DO PÁGINA SERVIÇOS
 
 //Cadastro 
 app.post('/servico/cadastro', async (req, res) => {
@@ -162,8 +163,71 @@ app.delete ('/servico/deletar/:id', async (req, res) => {
    }
 })
 
-//Bloco de Funcionalidade Peças
-app.put('/teste', async (req, res) => {
-   console.log(req.query)
-   res.status(200).json({message: "teste"})
+//BLOCO DA PÁGINA PEÇAS
+
+//Método create
+app.post('/pecas/cadastro', async (req, res) => {
+   const {nome, modelo, estoque, distribuidor, data, garantia, preco, observacao} = req.body
+   console.log(req.body)
+   try {
+      await prisma.Parts.create({
+         data: {
+            nome, modelo, estoque, distribuidor, data, garantia, preco, observacao
+         }
+      })
+
+      res.status(201).json({message: 'Sucesso'})
+   } catch (erro) {
+      console.erro(erro)
+      res.status(500).json({message:'Erro no servidor'})
+   }
+
+})
+
+//Método que solicita todos os dados do BD para Leitura
+app.get('/pecas', async (req, res) => {
+   try{
+      const servicos = await prisma.Parts.findMany()
+      res.status(200).json(servicos)
+   } catch (erro) {
+      console.erro(erro)
+      res.status(500).json({message: 'Erro no servidor'})
+   }
+})
+
+//Método de delete
+app.delete('/pecas/deletar/:id', async (req, res) => {
+   const {id} = req.params
+   try{
+      await prisma.Parts.delete({
+         where: {
+            id: id
+         }
+      })
+      res.status(204).json({message: "Usuário deletado"})
+   } catch (erro) {
+      console.erro(erro)
+      res.status(500).json({message:'Erro com o servidor'})
+   }
+})
+
+//Método de Atualização/Edição 
+app.put('/pecas/editar/:id', async (req, res) => {
+   const {id} = req.params
+   const {nome, modelo, estoque, distribuidor, data, garantia, preco, observacao} = req.body
+
+   try{
+      await prisma.Parts.update({
+         where: {
+            id: id
+         },
+         data: {
+            nome, modelo, estoque, distribuidor, data, garantia, preco, observacao
+         }
+      })
+      res.status(201).json({message:'Sucesso'})
+   } catch(erro) {
+      console.erro(erro)
+      res.status(500).json({message: 'Erro no servidor'})
+   }
 })
