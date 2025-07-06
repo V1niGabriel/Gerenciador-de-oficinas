@@ -12,16 +12,6 @@ function closePopup() {
   servicoEditandoId = null;
 }
 
-function button() {
-  
-  if (document.getElementsByClassName(menu-btn) = onclick){
-    setTimeout(() => {
-      window.location.href = 'public/pages/Homer/home2.html' 
-    }, 2000)
-  } 
-
-}
-
 function clearFields() {
   document.getElementById('nome').value = '';
   document.getElementById('modelo').value = '';
@@ -33,7 +23,7 @@ function clearFields() {
   document.getElementById('observacao').value = '';
 }
 
-function showAlert(message, type = 'success'){
+function showAlert(message, type = 'success', time = 4000){
   const alertBox = document.getElementById('alertBox');
   alertBox.textContent = message;
   alertBox.className = `alert ${type}`;
@@ -44,14 +34,14 @@ function showAlert(message, type = 'success'){
 
   setTimeout(() => {
     alertBox.classList.add('hidden');
-  }, 4000);
+  }, time);
 }
 
 async function carregarServicos() {
   const container = document.getElementById('cards-container');
   container.innerHTML = '';
   try {
-    const response = await fetch('http://localhost:3000/servico');
+    const response = await fetch('http://localhost:3000/pecas');
     const servicos = await response.json();
 
     servicos.forEach(servico => {
@@ -59,9 +49,13 @@ async function carregarServicos() {
       card.className = 'card';
       card.innerHTML = `
         <h3>${servico.nome}</h3>
-        <p><strong>Tipo:</strong> ${servico.tipo || '-'}</p>
+        <p><strong>Data:</strong> ${servico.data || ''} <p>
+        <p><strong>Modelo:</strong> ${servico.modelo}</p>
         <p><strong>Preço:</strong> R$ ${servico.preco}</p>
-        <p><strong>Obs:</strong> ${servico.observacao || '-'}</p>
+        <p><strong>Estoque:</strong> ${servico.estoque} <p>
+        <p><strong>Distribuidor:</strong> ${servico.distribuidor || ''} <p>
+        <p><strong>Garantia:</strong> ${servico.garantia || ''} <p>
+        <p><strong>Obs:</strong> ${servico.observacao || ''}</p>
         <button onclick="editarServico('${servico.id}')">Editar</button>
         <button onclick="deletarServico('${servico.id}')">Excluir</button>
       `;
@@ -75,16 +69,23 @@ async function carregarServicos() {
 
 async function submitForm() {
   const nome = document.getElementById('nome').value.trim();
-  const tipo = document.getElementById('tipo').value.trim();
+  const modelo = document.getElementById('modelo').value.trim();
   const preco = parseInt(document.getElementById('preco').value.trim(), 10);
+  const estoque = parseInt(document.getElementById('estoque').value.trim(), 10);
+  const distribuidor = document.getElementById('distribuidor').value.trim();
+  const data = document.getElementById('data').value.trim();
+  const garantia = document.getElementById('garantia').value.trim();
   const observacao = document.getElementById('observacao').value.trim();
 
-  if (!nome || !tipo) {
-    showAlert('Preencha nome e tipo!', "signal");
+  if (!nome || !modelo || !preco || !estoque) {
+    showAlert('Preencha nome, modelo, preço e quantidade!', "signal", 6000);
     return;
   }
 
-  const dado = { nome, tipo, preco, observacao };
+  const dado = { 
+    nome, modelo, preco, estoque, distribuidor, data, garantia, observacao
+  };
+  console.log(dado)
   await enviarDados(dado);
   closePopup();
   carregarServicos();
@@ -93,8 +94,8 @@ async function submitForm() {
 
 async function enviarDados(dado) {
   const url = servicoEditandoId 
-    ? `http://localhost:3000/servico/atualizar/${servicoEditandoId}`
-    : 'http://localhost:3000/servico/cadastro';
+    ? `http://localhost:3000/pecas/editar/${servicoEditandoId}`
+    : 'http://localhost:3000/pecas/cadastro';
   const method = servicoEditandoId ? 'PUT' : 'POST';
   const RespostaAlerta = servicoEditandoId ? 'Serviço editado' : 'Serviço adicionado';
 
@@ -107,23 +108,27 @@ async function enviarDados(dado) {
     if (!response.ok) throw new Error('Erro ao enviar dados');
     showAlert(RespostaAlerta);
     return await response.json();
-  } catch (error) {
-    console.error(error);
+  } catch (err) {
+    console.error(err);
     showAlert('Erro ao salvar serviço', 'error');
   }
 }
 
 async function editarServico(id) {
   try {
-    const response = await fetch('http://localhost:3000/servico');
+    const response = await fetch('http://localhost:3000/pecas');
     const servicos = await response.json();
     const servico = servicos.find(s => s.id === id);
 
     if (!servico) return;
 
     document.getElementById('nome').value = servico.nome;
-    document.getElementById('tipo').value = servico.tipo;
+    document.getElementById('modelo').value = servico.modelo;
     document.getElementById('preco').value = servico.preco;
+    document.getElementById('estoque').value = servico.estoque;
+    document.getElementById('distribuidor').value = servico.distribuidor;
+    document.getElementById('data').value = servico.data
+    document.getElementById('garantia').value = servico.garantia
     document.getElementById('observacao').value = servico.observacao;
 
     servicoEditandoId = id;
@@ -136,7 +141,7 @@ async function editarServico(id) {
 async function deletarServico(id) {
   if (!confirm('Deseja realmente excluir este serviço?')) return;
   try {
-    const resposta = await fetch(`http://localhost:3000/servico/deletar/${id}`, { method: 'DELETE' });
+    const resposta = await fetch(`http://localhost:3000/pecas/deletar/${id}`, { method: 'DELETE' });
     if(resposta.ok){
       showAlert('Serviço deletado!')
     } else{
