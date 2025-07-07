@@ -67,7 +67,7 @@
       }
 
       .sidebar .menu a:hover {
-        background-color: #c62828;
+        background-color: var(--vermelho);
       }
 
       .user-profile {
@@ -117,19 +117,75 @@
         font-weight: bold;
       }
 
-      /* Personaliza botões de visualização */
-      .fc-button-group .fc-button {
-        text-transform: capitalize !important;
+      #modal-agendar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.4);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 999;
       }
 
-      /* Força tradução */
-      .fc-button[data-value="dayGridMonth"]::after {
-        content: "Mês" !important;
-        color: white;
+      .modal-content {
+        background: #fff;
+        padding: 30px;
+        border-radius: 12px;
+        width: 400px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        position: relative;
       }
-      .fc-button[data-value="timeGridWeek"]::after {
-        content: "Semana" !important;
+
+      .modal-content h2 {
+        margin-bottom: 20px;
+        font-size: 20px;
+        color: var(--preto);
+      }
+
+      .modal-content label {
+        display: block;
+        margin-top: 10px;
+        font-weight: bold;
+      }
+
+      .modal-content input,
+      .modal-content textarea {
+        width: 100%;
+        padding: 8px;
+        margin-top: 5px;
+        border-radius: 8px;
+        border: 1px solid var(--cinza);
+      }
+
+      .modal-content .botoes {
+        margin-top: 20px;
+        display: flex;
+        justify-content: space-between;
+      }
+
+      .modal-content button {
+        padding: 8px 16px;
+        border: none;
+        border-radius: 8px;
+        background-color: var(--azul);
         color: white;
+        cursor: pointer;
+      }
+
+      .modal-content button:hover {
+        background-color: var(--vermelho);
+      }
+
+      .close-btn {
+        position: absolute;
+        top: 10px;
+        right: 15px;
+        font-size: 24px;
+        cursor: pointer;
+        color: var(--preto);
       }
     </style>
   </head>
@@ -137,11 +193,15 @@
     <div class="sidebar">
       <div>
         <div class="logo">
-          <img src="logo.png" alt="Logo MyCar" />
+          <a href="../ladingpage/ladingpage.html">
+            <img src="logo.png" alt="Logo MyCar" />
+          </a>
         </div>
         <div class="menu">
-          <a href="#">Agendar</a>
-          <a href="../registration services/services.html">Cadastro de Serviços</a>
+          <a href="#" onclick="abrirModalCriacao()">Agendar</a>
+          <a href="../registration services/services.html"
+            >Cadastro de Serviços</a
+          >
           <a href="../parts registration/parts.html">Cadastro de Peças</a>
           <a href="#">Verificar Histórico</a>
         </div>
@@ -156,14 +216,77 @@
       <div id="calendar"></div>
     </div>
 
-    <!-- FullCalendar JS -->
+    <div id="modal-agendar">
+      <div class="modal-content">
+        <span class="close-btn" onclick="fecharModal()">×</span>
+        <h2 id="modal-title">Novo Agendamento</h2>
+        <form id="form-agendamento">
+          <label for="titulo">Título:</label>
+          <input type="text" id="titulo" required />
+
+          <label for="data">Data:</label>
+          <input type="datetime-local" id="data" required />
+
+          <label for="cliente">Cliente:</label>
+          <input type="text" id="cliente" required />
+
+          <label for="veiculo">Veículo:</label>
+          <input type="text" id="veiculo" required />
+
+          <label for="descricao">Descrição:</label>
+          <textarea id="descricao"></textarea>
+
+          <label for="cor">Cor:</label>
+          <input type="color" id="cor" value="#355C7D" />
+
+          <div id="botoes-criacao">
+            <button type="submit">Agendar</button>
+          </div>
+
+          <div
+            id="botoes-edicao"
+            style="display: none; gap: 5px; margin-top: 15px"
+          >
+            <button type="button" onclick="salvarEdicao()">Salvar</button>
+            <button type="button" onclick="concluirAgendamento()">
+              Concluir
+            </button>
+            <button type="button" onclick="apagarAgendamento()">Apagar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/locales-all.min.js"></script>
 
     <script>
+      let calendar;
+      let eventoAtual = null;
+      let modoEdicao = false;
+
+      // Função para carregar eventos do localStorage
+      function carregarEventos() {
+        const dados = localStorage.getItem("eventos");
+        return dados ? JSON.parse(dados) : [];
+      }
+
+      // Função para salvar eventos no localStorage
+      function salvarEventos() {
+        const eventos = calendar.getEvents().map((e) => ({
+          id: e.id,
+          title: e.title,
+          start: e.startStr,
+          backgroundColor: e.backgroundColor,
+          extendedProps: e.extendedProps,
+        }));
+        localStorage.setItem("eventos", JSON.stringify(eventos));
+      }
+
       document.addEventListener("DOMContentLoaded", function () {
         const calendarEl = document.getElementById("calendar");
-        const calendar = new FullCalendar.Calendar(calendarEl, {
+
+        calendar = new FullCalendar.Calendar(calendarEl, {
           locale: "pt-br",
           initialView: "dayGridMonth",
           height: "auto",
@@ -177,10 +300,128 @@
             month: "Mês",
             week: "Semana",
           },
-          events: [],
+          dateClick: function (info) {
+            abrirModalCriacao(info.dateStr);
+          },
+          eventClick: function (info) {
+            editarEvento(info.event);
+          },
+          events: carregarEventos(),
         });
+
         calendar.render();
       });
+
+      function abrirModalCriacao(dataSelecionada = "") {
+        modoEdicao = false;
+        eventoAtual = null;
+
+        document.getElementById("modal-title").innerText = "Novo Agendamento";
+        document.getElementById("form-agendamento").reset();
+        document.getElementById("data").value = dataSelecionada;
+        document.getElementById("botoes-criacao").style.display = "block";
+        document.getElementById("botoes-edicao").style.display = "none";
+        document.getElementById("modal-agendar").style.display = "flex";
+      }
+
+      function editarEvento(evento) {
+        modoEdicao = true;
+        eventoAtual = evento;
+
+        document.getElementById("modal-title").innerText = "Editar Agendamento";
+        document.getElementById("titulo").value = evento.title;
+        document.getElementById("data").value = evento.startStr;
+        document.getElementById("cliente").value =
+          evento.extendedProps.cliente || "";
+        document.getElementById("veiculo").value =
+          evento.extendedProps.veiculo || "";
+        document.getElementById("descricao").value =
+          evento.extendedProps.descricao || "";
+        document.getElementById("cor").value = evento.backgroundColor;
+
+        document.getElementById("botoes-criacao").style.display = "none";
+        document.getElementById("botoes-edicao").style.display = "flex";
+        document.getElementById("modal-agendar").style.display = "flex";
+      }
+
+      function fecharModal() {
+        document.getElementById("modal-agendar").style.display = "none";
+        document.getElementById("form-agendamento").reset();
+        eventoAtual = null;
+        modoEdicao = false;
+      }
+
+      function salvarEdicao() {
+        if (eventoAtual) {
+          eventoAtual.setProp("title", document.getElementById("titulo").value);
+          eventoAtual.setStart(document.getElementById("data").value);
+          eventoAtual.setExtendedProp(
+            "cliente",
+            document.getElementById("cliente").value
+          );
+          eventoAtual.setExtendedProp(
+            "veiculo",
+            document.getElementById("veiculo").value
+          );
+          eventoAtual.setExtendedProp(
+            "descricao",
+            document.getElementById("descricao").value
+          );
+          eventoAtual.setProp(
+            "backgroundColor",
+            document.getElementById("cor").value
+          );
+          salvarEventos();
+          fecharModal();
+        }
+      }
+
+      function concluirAgendamento() {
+        if (eventoAtual) {
+          eventoAtual.setProp("title", eventoAtual.title + " (Concluído)");
+          eventoAtual.setProp("backgroundColor", "#4CAF50");
+          salvarEventos();
+          fecharModal();
+        }
+      }
+
+      function apagarAgendamento() {
+        if (eventoAtual) {
+          eventoAtual.remove();
+          salvarEventos();
+          fecharModal();
+        }
+      }
+
+      document
+        .getElementById("form-agendamento")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+
+          const titulo = document.getElementById("titulo").value;
+          const data = document.getElementById("data").value;
+          const cliente = document.getElementById("cliente").value;
+          const veiculo = document.getElementById("veiculo").value;
+          const descricao = document.getElementById("descricao").value;
+          const cor = document.getElementById("cor").value;
+
+          if (!modoEdicao) {
+            calendar.addEvent({
+              title: titulo,
+              start: data,
+              allDay: false,
+              backgroundColor: cor,
+              extendedProps: {
+                cliente: cliente,
+                veiculo: veiculo,
+                descricao: descricao,
+              },
+            });
+            salvarEventos();
+          }
+
+          fecharModal();
+        });
     </script>
   </body>
 </html>
