@@ -1,0 +1,50 @@
+<!-- public/relatorios.html -->
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="shortcut icon" type="imagex/png" href="/public/assets/img/logo-Mycar.ico">
+  <title>Relatórios - MyCar Oficina</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <aside class="sidebar">
+      <div class="logo">My<br><span>Car</span></div>
+      <nav class="menu">
+        <a href="../Homer/home2.html">Agenda</a>
+        <a href="../registration services/services.html">Cadastro de Serviços</a>
+        <a href="../parts registration/parts.html">Cadastro de Peças</a>
+        <a href="historico.html" class="active">Verificar Histórico</a>
+      </nav>
+      <div class="user-info">
+        <p><strong>My car</strong></p>
+        <p></p>
+      </div>
+    </aside>
+
+    <main class="content">
+      <div class="header">
+        <h2>Histórico de Agendamentos Finalizados</h2>
+        <a href="../Homer/home2.html" class="btn-voltar">← Voltar</a>
+      </div>
+
+      <div class="filtros">
+        <input type="text" id="cliente" placeholder="Cliente" />
+        <input type="text" id="veiculo" placeholder="Placa do Veículo" />
+        <input type="text" id="servico" placeholder="Serviço" />
+        <input type="date" id="data" placeholder="-"/>
+        <input type="number" id="preco" placeholder="Preço" />
+        <button onclick="buscarRelatorios()">Filtrar</button>
+      </div>
+
+      <div class="report-list" id="reportList">
+        <!-- Relatórios renderizados aqui -->
+      </div>
+    </main>
+  </div>
+
+  <script src="index.js"></script>
+</body>
+</html>

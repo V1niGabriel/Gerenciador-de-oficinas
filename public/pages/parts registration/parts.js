@@ -51,7 +51,7 @@ async function carregarServicos() {
         <h3>${servico.nome}</h3>
         <p><strong>Data:</strong> ${servico.data || ''} <p>
         <p><strong>Modelo:</strong> ${servico.modelo}</p>
-        <p><strong>Preço:</strong> R$ ${servico.preco}</p>
+        <p><strong>Preço:</strong> R$ ${(servico.preco)/100}</p>
         <p><strong>Estoque:</strong> ${servico.estoque} <p>
         <p><strong>Distribuidor:</strong> ${servico.distribuidor || ''} <p>
         <p><strong>Garantia:</strong> ${servico.garantia || ''} <p>
@@ -70,12 +70,14 @@ async function carregarServicos() {
 async function submitForm() {
   const nome = document.getElementById('nome').value.trim();
   const modelo = document.getElementById('modelo').value.trim();
-  const preco = parseInt(document.getElementById('preco').value.trim(), 10);
+  let   preco = parseFloat(document.getElementById('preco').value.trim(), 10);
   const estoque = parseInt(document.getElementById('estoque').value.trim(), 10);
   const distribuidor = document.getElementById('distribuidor').value.trim();
   const data = document.getElementById('data').value.trim();
   const garantia = document.getElementById('garantia').value.trim();
   const observacao = document.getElementById('observacao').value.trim();
+
+  preco = parseInt(preco * 100); //Conversão pois o banco de dados trabalhar com inteiros
 
   if (!nome || !modelo || !preco || !estoque) {
     showAlert('Preencha nome, modelo, preço e quantidade!', "signal", 6000);
@@ -124,7 +126,7 @@ async function editarServico(id) {
 
     document.getElementById('nome').value = servico.nome;
     document.getElementById('modelo').value = servico.modelo;
-    document.getElementById('preco').value = servico.preco;
+    document.getElementById('preco').value = (servico.preco)/100;
     document.getElementById('estoque').value = servico.estoque;
     document.getElementById('distribuidor').value = servico.distribuidor;
     document.getElementById('data').value = servico.data

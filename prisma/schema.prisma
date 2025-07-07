@@ -7,7 +7,6 @@
 generator client {
   provider = "prisma-client-js"
 }
-
 datasource db {
   provider = "mongodb"
   url      = env("DATABASE_URL")
@@ -26,6 +25,8 @@ model Services {
   tipo        String?
   preco       Int
   observacao  String?
+
+  agendamentos ServicesOnAgendamentos[]
 }
 
 model Parts {
@@ -38,4 +39,73 @@ model Parts {
   garantia        String?
   preco           Int
   observacao      String?
+
+  agendamentos PartsOnAgendamentos[]
+}
+model Client {
+  id        String @id @default(auto()) @map("_id") @db.ObjectId
+  nome      String
+  telefone  String? @unique
+  descricao String?
+
+  veiculo     Vehicle[]     //1 cliente -> vários veiculos
+  agendamento Agendamento[] //1 cliente -> vários agendamentos
+}
+model Vehicle {
+  id      String @id @default(auto()) @map("_id") @db.ObjectId
+  placa   String @unique
+  modelo  String?
+  marca   String?
+  cor     String?
+
+  //relacionamento com o modelo veiculo
+  cliente   Client @relation(fields: [clienteID], references: [id])
+  clienteID String @db.ObjectId
+
+  agendamento Agendamento[] // 1 veículo -> vários agendamentos
+}
+model Agendamento {
+  id          String @id @default(auto()) @map("_id") @db.ObjectId
+  titulo      String
+  data        DateTime
+  descricao   String?
+
+  cliente     Client @relation(fields: [clienteId], references: [id])
+  clienteId   String @db.ObjectId
+
+  veiculo      Vehicle @relation(fields: [veiculoId], references: [id])
+  veiculoId    String  @db.ObjectId
+
+  relatorio    Report @relation(fields: [relatorioId], references: [id])
+  relatorioId  String @unique @db.ObjectId
+
+  servicos  ServicesOnAgendamentos[]
+  pecas     PartsOnAgendamentos[]
+}
+model Report {
+    id      String @id @default(auto()) @map("_id") @db.ObjectId
+    Data    DateTime @default(now())
+    preco   Float
+
+    //relacionamento com agendamento
+    agenda Agendamento?
+}
+model ServicesOnAgendamentos {
+  id             String       @id @default(auto()) @map("_id") @db.ObjectId
+
+  agendamento    Agendamento  @relation(fields: [agendamentoId], references: [id])
+  agendamentoId  String       @db.ObjectId
+
+  service        Services     @relation(fields: [serviceId], references: [id])
+  serviceId      String       @db.ObjectId
+}
+
+model PartsOnAgendamentos {
+  id             String       @id @default(auto()) @map("_id") @db.ObjectId
+
+  agendamento    Agendamento  @relation(fields: [agendamentoId], references: [id])
+  agendamentoId  String       @db.ObjectId
+
+  part           Parts        @relation(fields: [partId], references: [id])
+  partId         String       @db.ObjectId
 }

@@ -1,0 +1,144 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f9fafb;
+}
+
+.container {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar {
+  width: 240px;
+  background-color: #1f3b57;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 20px 15px;
+}
+
+.logo {
+  font-size: 28px;
+  font-weight: bold;
+  line-height: 1;
+  margin-bottom: 30px;
+}
+
+.logo span {
+  font-weight: normal;
+}
+
+.menu a {
+  display: block;
+  padding: 12px;
+  margin: 8px 0;
+  text-decoration: none;
+  background-color: #294865;
+  color: white;
+  border-radius: 8px;
+  text-align: center;
+  transition: 0.3s;
+}
+
+.menu a:hover,
+.menu a.active {
+  background-color: #3a5a7d;
+}
+
+.user-info {
+  background-color: #294865;
+  padding: 10px;
+  border-radius: 8px;
+  text-align: center;
+  font-size: 14px;
+}
+
+.content {
+  flex: 1;
+  padding: 40px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.header h2 {
+  font-size: 24px;
+}
+
+.btn-voltar {
+  background-color: #1f3b57;
+  color: white;
+  padding: 10px 15px;
+  text-decoration: none;
+  border-radius: 8px;
+  transition: 0.3s;
+}
+
+.btn-voltar:hover {
+  background-color: #294865;
+}
+
+.report-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 20px;
+}
+
+.report-card {
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+  padding: 20px;
+  transition: 0.3s;
+}
+
+.report-card:hover {
+  transform: translateY(-3px);
+}
+
+.report-card h3 {
+  color: #1f3b57;
+  margin-bottom: 10px;
+}
+
+.report-card p {
+  margin: 5px 0;
+  font-size: 14px;
+}
+
+.filtros {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.filtros input,
+.filtros button {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.filtros button {
+  background-color: #1f3b57;
+  color: white;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.filtros button:hover {
+  background-color: #294865;
+}
