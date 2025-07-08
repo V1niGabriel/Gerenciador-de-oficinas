@@ -71,6 +71,7 @@ app.post('/SingIn', async (req, res) => {
 
    } catch(error) {
       //Erro generico de servidor
+      console.error(error);
       return res.status(500).json({message: "erro no servidor"})
    }   
 })
