@@ -91,15 +91,14 @@ body {
   transition: background .3s;
 }
 
-.botaoh {
+#botaoh {
   font-family: "Montserrat", sans-serif;
   font-optical-sizing: auto;
   font-weight: 500;
   font-style: normal;
 }
 
-
-.botaoh:hover { background:#f9a825; 
+#botaoh:hover { background:#f9a825; 
 }
 
 /* Hero */
@@ -235,7 +234,6 @@ body {
   opacity: 0.85;
 }
 
-
 /* --- IGNORE --- */
 
 /* Hamburger mobile */
@@ -292,6 +290,10 @@ label.hamburger span {
   .menu, .botao { display:none; }
   label.hamburger { display:flex; }
 
+  #botaoh{
+    display: block !important;
+  }
+
   /* Toggle de menu via checkbox */
   #menu-checkbox:checked ~ .menu {
     display:flex;
@@ -334,14 +336,14 @@ label.hamburger span {
   }
 
  @keyframes fadeSlideUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
 }
 
