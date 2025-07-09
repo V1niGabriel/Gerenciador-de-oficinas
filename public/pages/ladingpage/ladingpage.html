@@ -28,7 +28,7 @@
         <a href="#servicos">Serviços</a>
         <a href="#sobre">Sobre</a>
         <a href="#contato">Contato</a>
-
+        <button id="botaoh" onclick="window.location.href='../Homer/home2.html'"> Área do Cliente </button>
       </nav>
 
       <button class="botao" onclick="window.location.href='../Homer/home2.html'">
@@ -123,5 +123,10 @@
     </div>
   </footer>
   <p class="copyright">© 2025 - MyCar</p>
+  <script>
+    if (window.innerWidth < 769){
+      document.getElementById('botaoh').style.display = 'block'
+    }
+  </script>
 </body>
 </html>

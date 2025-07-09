@@ -80,7 +80,8 @@ body {
 .botao:hover { background:#f9a825; 
 }
 
-.botaoh {
+#botaoh {
+  display: none;
   background:#355c7d;
   color:#fff;
   border:none;
@@ -303,6 +304,7 @@ label.hamburger span {
     padding:1rem;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   }
+
   #menu-checkbox:checked + label.hamburger span:nth-child(1) {
     transform: rotate(45deg) translate(5px,5px);
   }
@@ -311,6 +313,24 @@ label.hamburger span {
   }
   #menu-checkbox:checked + label.hamburger span:nth-child(3) {
     transform: rotate(-45deg) translate(5px,-5px);
+  }
+
+  .conteudo-servico,
+  .conteudo-sobre{
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .conteudo-servico img,
+  .conteudo-sobre img {
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto;
+  }
+
+  .texto-servico,
+  .texto-sobre {
+    max-width: 100%;
   }
 
  @keyframes fadeSlideUp {
@@ -325,22 +345,3 @@ label.hamburger span {
 }
 }
 
-@media (max-width: 768px) {
-   .conteudo-servico,
-   .conteudo-sobre{
-      flex-direction: column;
-      text-align: center;
-   }
-
-   .conteudo-servico img,
-   .conteudo-sobre img {
-      width: 100%;
-      max-width: 300px;
-      margin: 0 auto;
-   }
-
-   .texto-servico,
-   .texto-sobre {
-      max-width: 100%;
-   }
-}
