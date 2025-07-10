@@ -41,7 +41,7 @@ async function carregarServicos() {
   const container = document.getElementById('cards-container');
   container.innerHTML = '';
   try {
-    const response = await fetch('http://localhost:3000/pecas');
+    const response = await fetch('https://gerenciador-de-oficinas.onrender.com/pecas');
     const servicos = await response.json();
 
     servicos.forEach(servico => {
