@@ -96,8 +96,8 @@ async function submitForm() {
 
 async function enviarDados(dado) {
   const url = servicoEditandoId 
-    ? `http://localhost:3000/pecas/editar/${servicoEditandoId}`
-    : 'http://localhost:3000/pecas/cadastro';
+    ? `https://gerenciador-de-oficinas.onrender.com/pecas/editar/${servicoEditandoId}`
+    : 'https://gerenciador-de-oficinas.onrender.com/pecas/cadastro';
   const method = servicoEditandoId ? 'PUT' : 'POST';
   const RespostaAlerta = servicoEditandoId ? 'Serviço editado' : 'Serviço adicionado';
 
@@ -118,7 +118,7 @@ async function enviarDados(dado) {
 
 async function editarServico(id) {
   try {
-    const response = await fetch('http://localhost:3000/pecas');
+    const response = await fetch('https://gerenciador-de-oficinas.onrender.com/pecas');
     const servicos = await response.json();
     const servico = servicos.find(s => s.id === id);
 
@@ -143,7 +143,7 @@ async function editarServico(id) {
 async function deletarServico(id) {
   if (!confirm('Deseja realmente excluir este serviço?')) return;
   try {
-    const resposta = await fetch(`http://localhost:3000/pecas/deletar/${id}`, { method: 'DELETE' });
+    const resposta = await fetch(`https://gerenciador-de-oficinas.onrender.com/pecas/deletar/${id}`, { method: 'DELETE' });
     if(resposta.ok){
       showAlert('Serviço deletado!')
     } else{

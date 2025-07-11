@@ -65,19 +65,22 @@ model Vehicle {
   agendamento Agendamento[] // 1 veículo -> vários agendamentos
 }
 model Agendamento {
-  id          String @id @default(auto()) @map("_id") @db.ObjectId
-  titulo      String
-  data        DateTime
-  descricao   String?
+  id                String @id @default(auto()) @map("_id") @db.ObjectId
+  title             String
+  start             DateTime
+  backgroundColor   String
+  Cliente           String?
+  veiculo           String?
+  descricao         String?
 
-  cliente     Client @relation(fields: [clienteId], references: [id])
-  clienteId   String @db.ObjectId
+  cliente     Client? @relation(fields: [clienteId], references: [id])
+  clienteId   String? @db.ObjectId
 
-  veiculo      Vehicle @relation(fields: [veiculoId], references: [id])
-  veiculoId    String  @db.ObjectId
+  veiculos     Vehicle? @relation(fields: [veiculoId], references: [id])
+  veiculoId    String?  @db.ObjectId
 
-  relatorio    Report @relation(fields: [relatorioId], references: [id])
-  relatorioId  String @unique @db.ObjectId
+  relatorio    Report? @relation(fields: [relatorioId], references: [id])
+  relatorioId  String? @unique @db.ObjectId
 
   servicos  ServicesOnAgendamentos[]
   pecas     PartsOnAgendamentos[]
@@ -93,19 +96,19 @@ model Report {
 model ServicesOnAgendamentos {
   id             String       @id @default(auto()) @map("_id") @db.ObjectId
 
-  agendamento    Agendamento  @relation(fields: [agendamentoId], references: [id])
-  agendamentoId  String       @db.ObjectId
+  agendamento    Agendamento?  @relation(fields: [agendamentoId], references: [id])
+  agendamentoId  String?       @db.ObjectId
 
-  service        Services     @relation(fields: [serviceId], references: [id])
-  serviceId      String       @db.ObjectId
+  service        Services?     @relation(fields: [serviceId], references: [id])
+  serviceId      String?       @db.ObjectId
 }
 
 model PartsOnAgendamentos {
   id             String       @id @default(auto()) @map("_id") @db.ObjectId
 
-  agendamento    Agendamento  @relation(fields: [agendamentoId], references: [id])
-  agendamentoId  String       @db.ObjectId
+  agendamento    Agendamento?  @relation(fields: [agendamentoId], references: [id])
+  agendamentoId  String?       @db.ObjectId
 
-  part           Parts        @relation(fields: [partId], references: [id])
-  partId         String       @db.ObjectId
+  part           Parts?        @relation(fields: [partId], references: [id])
+  partId         String?       @db.ObjectId
 }

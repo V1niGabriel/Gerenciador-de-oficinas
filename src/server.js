@@ -5,49 +5,66 @@ import path from 'path'
 import bcrypt from 'bcryptjs'
 import { hash } from 'crypto'
 import { CallTracker } from 'assert'
+import eventoRotas from './evento.js'
+import * as controller from './controller.js'
 
 const prisma = new PrismaClient()
 const app = express()
+const PORT = process.env.PORT || 3000;
 
-//permite a requisição por solicitações externas. Funciona semelhante um middleware 
-app.use(cors({origin: 'http://127.0.0.1:5500'}))
+//permite a requisição por solicitações externas. MIDDLEWARE 
+app.use(cors({ origin: 'http://127.0.0.1:5500' }))
 //app.use(cors({origin: 'https://v1nigabriel.github.io'}))
 app.use(express.json())
 app.use(express.static(path.join(process.cwd(), 'public')))
-app.listen(3000)
+
+//Rotas controller - precificação de serviço
+const router = express.Router();
+router.get('/api/service', controller.listarServicos);
+router.get('/api/parts', controller.listarPecas);
+router.post('/api/agenda/:id/finalizar', controller.finalizarAgendamento);
+
+app.listen(PORT, () => {
+   console.log(`Servidor rodando na porta ${PORT}`);
+})
+
+app.use(router);
+
+app.use('/api/agenda', eventoRotas(prisma));
+
 
 //Bloco de cadastro do usuario
-app.post('/singUp', async (req, res) => { 
-   const {nome, email, senha} = req.body
+app.post('/singUp', async (req, res) => {
+   const { nome, email, senha } = req.body
    console.log(nome, email, senha)
 
-  try{
-   const senhaHash = await bcrypt.hash(senha, 10)
-   const dados = await prisma.User.create({
-      data: {
-         nome: nome,
-         email: email,
-         senha: senhaHash
-      }
-   })
-   res.status(201).json({message: "Usuário cadastrado com sucesso!"})
-  } catch(error){
+   try {
+      const senhaHash = await bcrypt.hash(senha, 10)
+      const dados = await prisma.User.create({
+         data: {
+            nome: nome,
+            email: email,
+            senha: senhaHash
+         }
+      })
+      res.status(201).json({ message: "Usuário cadastrado com sucesso!" })
+   } catch (error) {
 
-   if (error.code === 'P2002' && error.meta?.target?.includes('email')) {
-      return res.status(409).json({message: "Email já está em uso"}); //409 = erro de conflito
-   }
+      if (error.code === 'P2002' && error.meta?.target?.includes('email')) {
+         return res.status(409).json({ message: "Email já está em uso" }); //409 = erro de conflito
+      }
       //Erro generico de servidor
-      return res.status(500).json({message: "erro no servidor"})
-  }
+      return res.status(500).json({ message: "erro no servidor" })
+   }
 })
 
 //Bloco de verificação de entrada da página de Login
 app.post('/SingIn', async (req, res) => {
-   const {email} = req.body
+   const { email } = req.body
    const pwd = req.body.senha
    console.log(email, pwd)
 
-   try{
+   try {
       let verificador = await prisma.User.findUnique({
          where: {
             email: email
@@ -63,26 +80,26 @@ app.post('/SingIn', async (req, res) => {
       const SenhaValida = await bcrypt.compare(pwd, verificador)
 
       if (!SenhaValida) {
-         return res.status(401).json({message: "Senha incorreta"})
+         return res.status(401).json({ message: "Senha incorreta" })
       }
-      
+
       console.log("SenhaValida:", SenhaValida)
 
-      res.status(200).json({message: "Login realizado com sucesso!"})
+      res.status(200).json({ message: "Login realizado com sucesso!" })
 
-   } catch(error) {
+   } catch (error) {
       //Erro generico de servidor
       console.error(error);
-      return res.status(500).json({message: "erro no servidor"})
-   }   
+      return res.status(500).json({ message: "erro no servidor" })
+   }
 })
 
-app.get ('/relatorio', async (req, res) => {
-   try{
+app.get('/relatorio', async (req, res) => {
+   try {
       const dados = await prisma.services.findMany()
       res.status(201).json(dados)
-   } catch(err){
-      res.status(500).json({message: 'erro com o servidor'})
+   } catch (err) {
+      res.status(500).json({ message: 'erro com o servidor' })
    }
 })
 
@@ -90,11 +107,11 @@ app.get ('/relatorio', async (req, res) => {
 
 //Cadastro 
 app.post('/servico/cadastro', async (req, res) => {
-   const {nome, tipo, preco, observacao} = req.body
+   const { nome, tipo, preco, observacao } = req.body
    console.log(req.body)
    console.log(nome, tipo, preco, observacao)
 
-   try{
+   try {
       const dados = await prisma.Services.create({
          data: {
             nome: nome,
@@ -105,10 +122,10 @@ app.post('/servico/cadastro', async (req, res) => {
       })
 
       res.status(201).json(dados)
-   } catch (error){
+   } catch (error) {
       console.error(error);
       //Erro generico de servidor
-      return res.status(500).json({message: "erro no servidor"})
+      return res.status(500).json({ message: "erro no servidor" })
    }
 
 })
@@ -120,48 +137,48 @@ app.get('/servico', async (req, res) => {
       res.status(200).json(servicos)
    } catch (error) {
       console.error(error)
-      res.status(500).json({message: "Erro no servidor"})
+      res.status(500).json({ message: "Erro no servidor" })
    }
 })
 
 //Atualização
 app.put('/servico/atualizar/:id', async (req, res) => {
-   const {id} = req.params;
-   const {nome, tipo, preco, observacao} = req.body
+   const { id } = req.params;
+   const { nome, tipo, preco, observacao } = req.body
    console.log(id)
    console.log(nome, tipo, preco, observacao)
-   try{
+   try {
       await prisma.Services.update({
          where: {
             id: id
          },
          data: {
-            nome: nome, 
-            tipo: tipo, 
-            preco: preco, 
+            nome: nome,
+            tipo: tipo,
+            preco: preco,
             observacao: observacao
          }
       })
-      res.status(201).json({message: "Atualização feita"})
-  } catch (erro) {
+      res.status(201).json({ message: "Atualização feita" })
+   } catch (erro) {
       console.error(erro)
-      res.status(500).json({message: "Erro ao atualizar serviço"})
-  }
+      res.status(500).json({ message: "Erro ao atualizar serviço" })
+   }
 })
 
 //Deletar
-app.delete ('/servico/deletar/:id', async (req, res) => {
-   const {id} = req.params;
-   try{
+app.delete('/servico/deletar/:id', async (req, res) => {
+   const { id } = req.params;
+   try {
       await prisma.Services.delete({
          where: {
             id: id
          }
       })
-      res.status(204).json({message: "Usuário deletado"})
+      res.status(204).json({ message: "Usuário deletado" })
    } catch (erro) {
       console.erro(erro)
-      res.status(500).json({message: "Erro ao deletar usuário"})
+      res.status(500).json({ message: "Erro ao deletar usuário" })
    }
 })
 
@@ -169,7 +186,7 @@ app.delete ('/servico/deletar/:id', async (req, res) => {
 
 //Método create
 app.post('/pecas/cadastro', async (req, res) => {
-   const {nome, modelo, estoque, distribuidor, data, garantia, preco, observacao} = req.body
+   const { nome, modelo, estoque, distribuidor, data, garantia, preco, observacao } = req.body
    console.log(req.body)
    try {
       await prisma.Parts.create({
@@ -178,47 +195,47 @@ app.post('/pecas/cadastro', async (req, res) => {
          }
       })
 
-      res.status(201).json({message: 'Sucesso'})
+      res.status(201).json({ message: 'Sucesso' })
    } catch (erro) {
       console.erro(erro)
-      res.status(500).json({message:'Erro no servidor'})
+      res.status(500).json({ message: 'Erro no servidor' })
    }
 
 })
 
 //Método que solicita todos os dados do BD para Leitura
 app.get('/pecas', async (req, res) => {
-   try{
+   try {
       const servicos = await prisma.Parts.findMany()
       res.status(200).json(servicos)
    } catch (erro) {
       console.erro(erro)
-      res.status(500).json({message: 'Erro no servidor'})
+      res.status(500).json({ message: 'Erro no servidor' })
    }
 })
 
 //Método de delete
 app.delete('/pecas/deletar/:id', async (req, res) => {
-   const {id} = req.params
-   try{
+   const { id } = req.params
+   try {
       await prisma.Parts.delete({
          where: {
             id: id
          }
       })
-      res.status(204).json({message: "Usuário deletado"})
+      res.status(204).json({ message: "Usuário deletado" })
    } catch (erro) {
       console.erro(erro)
-      res.status(500).json({message:'Erro com o servidor'})
+      res.status(500).json({ message: 'Erro com o servidor' })
    }
 })
 
 //Método de Atualização/Edição 
 app.put('/pecas/editar/:id', async (req, res) => {
-   const {id} = req.params
-   const {nome, modelo, estoque, distribuidor, data, garantia, preco, observacao} = req.body
+   const { id } = req.params
+   const { nome, modelo, estoque, distribuidor, data, garantia, preco, observacao } = req.body
 
-   try{
+   try {
       await prisma.Parts.update({
          where: {
             id: id
@@ -227,9 +244,80 @@ app.put('/pecas/editar/:id', async (req, res) => {
             nome, modelo, estoque, distribuidor, data, garantia, preco, observacao
          }
       })
-      res.status(201).json({message:'Sucesso'})
-   } catch(erro) {
+      res.status(201).json({ message: 'Sucesso' })
+   } catch (erro) {
       console.erro(erro)
-      res.status(500).json({message: 'Erro no servidor'})
+      res.status(500).json({ message: 'Erro no servidor' })
    }
 })
+
+//Bloco da funcionalidade de Agendamento
+
+/*
+// GET - Listar todos os eventos
+app.get('/', async (req, res) => {
+   try {
+      const eventos = await prisma.evento.findMany();
+      res.json(eventos);
+   } catch (err) {
+      res.status(500).json({ error: 'Erro ao buscar eventos' });
+   }
+});
+
+// POST - Criar novo evento
+app.post('/agendar', async (req, res) => {
+   const { title, start, backgroundColor, cliente, veiculo, descricao } = req.body;
+   try {
+      const evento = await prisma.evento.create({
+         data: {
+            title,
+            start: new Date(start),
+            backgroundColor,
+            cliente,
+            veiculo,
+            descricao,
+         },
+      });
+      res.json(evento);
+   } catch (err) {
+      res.status(500).json({ error: 'Erro ao criar evento' });
+   }
+});
+
+// PUT - Atualizar evento
+app.put('/:id', async (req, res) => {
+   const { id } = req.params;
+   const { title, start, backgroundColor, cliente, veiculo, descricao } = req.body;
+   try {
+      const evento = await prisma.evento.update({
+         where: { id: id },
+         data: {
+            title,
+            start: new Date(start),
+            backgroundColor,
+            cliente,
+            veiculo,
+            descricao,
+         },
+      });
+      res.json(evento);
+   } catch (err) {
+      res.status(500).json({ error: 'Erro ao atualizar evento' });
+   }
+});
+
+// DELETE - Excluir evento
+app.delete('/:id', async (req, res) => {
+   const { id } = req.params;
+   try {
+      await prisma.evento.delete({
+         where: { id: id },
+      });
+      res.json({ message: 'Evento excluído' });
+   } catch (err) {
+      res.status(500).json({ error: 'Erro ao excluir evento' });
+   }
+});
+
+return router;*/
+
