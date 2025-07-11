@@ -18,20 +18,21 @@ app.use(cors({ origin: 'http://127.0.0.1:5500' }))
 app.use(express.json())
 app.use(express.static(path.join(process.cwd(), 'public')))
 
-//Rotas controller - precificação de serviço
+//Rotas controller.js - precificação de serviço
 const router = express.Router();
 router.get('/api/service', controller.listarServicos);
 router.get('/api/parts', controller.listarPecas);
 router.post('/api/agenda/:id/finalizar', controller.finalizarAgendamento);
+router.get('/api/relatorios', controller.listarRelatorios);
+
+app.use(router);
+
+//Rotas evento.js
+app.use('/api/agenda', eventoRotas(prisma));
 
 app.listen(PORT, () => {
    console.log(`Servidor rodando na porta ${PORT}`);
 })
-
-app.use(router);
-
-app.use('/api/agenda', eventoRotas(prisma));
-
 
 //Bloco de cadastro do usuario
 app.post('/singUp', async (req, res) => {
@@ -250,74 +251,4 @@ app.put('/pecas/editar/:id', async (req, res) => {
       res.status(500).json({ message: 'Erro no servidor' })
    }
 })
-
-//Bloco da funcionalidade de Agendamento
-
-/*
-// GET - Listar todos os eventos
-app.get('/', async (req, res) => {
-   try {
-      const eventos = await prisma.evento.findMany();
-      res.json(eventos);
-   } catch (err) {
-      res.status(500).json({ error: 'Erro ao buscar eventos' });
-   }
-});
-
-// POST - Criar novo evento
-app.post('/agendar', async (req, res) => {
-   const { title, start, backgroundColor, cliente, veiculo, descricao } = req.body;
-   try {
-      const evento = await prisma.evento.create({
-         data: {
-            title,
-            start: new Date(start),
-            backgroundColor,
-            cliente,
-            veiculo,
-            descricao,
-         },
-      });
-      res.json(evento);
-   } catch (err) {
-      res.status(500).json({ error: 'Erro ao criar evento' });
-   }
-});
-
-// PUT - Atualizar evento
-app.put('/:id', async (req, res) => {
-   const { id } = req.params;
-   const { title, start, backgroundColor, cliente, veiculo, descricao } = req.body;
-   try {
-      const evento = await prisma.evento.update({
-         where: { id: id },
-         data: {
-            title,
-            start: new Date(start),
-            backgroundColor,
-            cliente,
-            veiculo,
-            descricao,
-         },
-      });
-      res.json(evento);
-   } catch (err) {
-      res.status(500).json({ error: 'Erro ao atualizar evento' });
-   }
-});
-
-// DELETE - Excluir evento
-app.delete('/:id', async (req, res) => {
-   const { id } = req.params;
-   try {
-      await prisma.evento.delete({
-         where: { id: id },
-      });
-      res.json({ message: 'Evento excluído' });
-   } catch (err) {
-      res.status(500).json({ error: 'Erro ao excluir evento' });
-   }
-});
-
-return router;*/
 

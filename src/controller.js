@@ -39,7 +39,7 @@ export const finalizarAgendamento = async (req, res) => {
       const relatorio = await tx.report.create({
         data: {
           preco: totalPrice,
-          agenda: { connect: { id: id } }
+          agendamento: { connect: { id: id } }
         }
       });
 
@@ -77,7 +77,6 @@ export const finalizarAgendamento = async (req, res) => {
         data: {
           title: `${agendamentoAtual.title} (Finalizado)`,
           backgroundColor: '#4CAF50', // Cor verde para concluído
-          relatorioId: relatorio.id,
         },
       });
 
@@ -92,3 +91,44 @@ export const finalizarAgendamento = async (req, res) => {
   }
 };
 
+//Bloco dos relatórios
+export const listarRelatorios = async (req, res) => {
+  try {
+    const { cliente, veiculo, servico, data, preco } = req.query;
+    
+    const where = {};
+
+    // Construção da busca com base nos filtros relacionais
+    if (cliente) {
+      // Filtra pelo nome do cliente dentro da relação
+      where.agendamento = { ...where.agendamento, cliente: { nome: { contains: cliente, mode: 'insensitive' } } };
+    }
+    if (veiculo) {
+      // Filtra pela placa do veículo dentro da relação
+      where.agendamento = { ...where.agendamento, veiculo: { placa: { contains: veiculo, mode: 'insensitive' } } };
+    }
+    // ... outros filtros ...
+
+    const relatorios = await prisma.Report.findMany({
+      where,
+      include: {
+        // Inclui o agendamento relacionado
+        agendamento: {
+          include: {
+            // Dentro do agendamento, inclui o cliente e o veículo
+            cliente: true,
+            veiculo: true,
+          }
+        }
+      },
+      orderBy: {
+        data: 'desc' // Ordena pelos mais recentes
+      }
+    });
+
+    res.status(200).json(relatorios);
+  } catch (error) {
+    console.error("Erro ao buscar relatórios:", error);
+    res.status(500).json({ error: 'Erro ao buscar relatórios.' });
+  }
+};

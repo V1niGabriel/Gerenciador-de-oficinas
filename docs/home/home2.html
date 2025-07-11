@@ -255,11 +255,14 @@
         <label for="data">Data:</label>
         <input type="datetime-local" id="data" required />
 
-        <label for="cliente">Cliente:</label>
-        <input type="text" id="cliente" required />
+        <label for="clienteNome">Nome do Cliente:</label>
+        <input type="text" id="clienteNome" required />
 
-        <label for="veiculo">Veículo:</label>
-        <input type="text" id="veiculo" required />
+        <label for="veiculoPlaca">Placa do Veículo:</label>
+        <input type="text" id="veiculoPlaca" required placeholder="Ex: BRA2E19" />
+
+        <label for="veiculoModelo">Modelo do Veículo:</label>
+        <input type="text" id="veiculoModelo" placeholder="Ex: Fiat Cronos" />
 
         <label for="descricao">Descrição:</label>
         <textarea id="descricao"></textarea>
@@ -338,6 +341,7 @@
         start: evento.start,
         backgroundColor: evento.backgroundColor,
         extendedProps: {
+          // Passa OBJETOS inteiros, o que dá acesso a todos os dados
           cliente: evento.cliente,
           veiculo: evento.veiculo,
           descricao: evento.descricao
@@ -347,7 +351,7 @@
 
     //Função para salver os agendamentos no banco de dados
     async function salvarEventos(evento) {
-      await fetch('http://localhost:3000/api/agenda', {
+      return await fetch('http://localhost:3000/api/agenda', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(evento)
@@ -461,10 +465,10 @@
           containerPecas.innerHTML += `
          <div>
           <label>
-            <input type="checkbox" data-price="${(peca.preco)/100}" value="${peca.id}" onchange="calcularTotalPrecificacao()">
+            <input type="checkbox" data-price="${(peca.preco) / 100}" value="${peca.id}" onchange="calcularTotalPrecificacao()">
             ${peca.nome}
           </label>
-          <span>R$ ${((peca.preco)/100).toFixed(2)}</span>
+          <span>R$ ${((peca.preco) / 100).toFixed(2)}</span>
         </div>
       `;
         });
@@ -537,13 +541,15 @@
 
       document.getElementById("modal-title").innerText = "Editar Agendamento";
       document.getElementById("titulo").value = evento.title;
-      document.getElementById("data").value = evento.startStr;
-      document.getElementById("cliente").value =
-        evento.extendedProps.cliente || "";
-      document.getElementById("veiculo").value =
-        evento.extendedProps.veiculo || "";
-      document.getElementById("descricao").value =
-        evento.extendedProps.descricao || "";
+      // Formata a data corretamente para o input datetime-local
+      document.getElementById("data").value = new Date(evento.start).toISOString().slice(0, 16);
+
+      // Acessando os dados aninhados com segurança (usando '?')
+      document.getElementById("clienteNome").value = evento.extendedProps.cliente?.nome || "";
+      document.getElementById("veiculoPlaca").value = evento.extendedProps.veiculo?.placa || "";
+      document.getElementById("veiculoModelo").value = evento.extendedProps.veiculo?.modelo || "";
+
+      document.getElementById("descricao").value = evento.extendedProps.descricao || "";
       document.getElementById("cor").value = evento.backgroundColor;
 
       document.getElementById("botoes-criacao").style.display = "none";
@@ -559,52 +565,38 @@
     }
 
     async function salvarEdicao() {
-      if (eventoAtual) {
-        eventoAtual.setProp("title", document.getElementById("titulo").value);
-        eventoAtual.setStart(document.getElementById("data").value);
-        eventoAtual.setExtendedProp("cliente", document.getElementById("cliente").value);
-        eventoAtual.setExtendedProp("veiculo", document.getElementById("veiculo").value);
-        eventoAtual.setExtendedProp("descricao", document.getElementById("descricao").value);
-        eventoAtual.setProp("backgroundColor", document.getElementById("cor").value);
+      if (!eventoAtual) return;
 
-        await fetch(`http://localhost:3000/api/agenda/${eventoAtual.id}`, {
+      const dadosAtualizados = {
+        title: document.getElementById("titulo").value,
+        start: document.getElementById("data").value,
+        backgroundColor: document.getElementById("cor").value,
+        descricao: document.getElementById("descricao").value,
+        clienteNome: document.getElementById("clienteNome").value,
+        veiculoPlaca: document.getElementById("veiculoPlaca").value,
+        veiculoModelo: document.getElementById("veiculoModelo").value
+      };
+
+      try {
+        const response = await fetch(`http://localhost:3000/api/agenda/${eventoAtual.id}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            title: eventoAtual.title,
-            start: eventoAtual.startStr,
-            backgroundColor: eventoAtual.backgroundColor,
-            cliente: eventoAtual.extendedProps.cliente,
-            veiculo: eventoAtual.extendedProps.veiculo,
-            descricao: eventoAtual.extendedProps.descricao
-          })
+          body: JSON.stringify(dadosAtualizados)
         });
+
+        if (!response.ok) {
+          throw new Error('Falha ao atualizar o agendamento.');
+        }
+
+        // Recarrega todos os eventos do servidor. É a forma mais segura de garantir consistência.
+        calendar.refetchEvents();
         fecharModal();
+
+      } catch (error) {
+        console.error("Erro ao salvar edição:", error);
+        alert("Não foi possível salvar as alterações.");
       }
     }
-
-    /*
-    async function concluirAgendamento() {
-      if (eventoAtual) {
-        eventoAtual.setProp("title", eventoAtual.title + " (Concluído)");
-        eventoAtual.setProp("backgroundColor", "#4CAF50");
-        await fetch(`http://localhost:3000/api/agenda/${eventoAtual.id}`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            title: eventoAtual.title,
-            start: eventoAtual.startStr,
-            backgroundColor: eventoAtual.backgroundColor,
-            cliente: eventoAtual.extendedProps.cliente,
-            veiculo: eventoAtual.extendedProps.veiculo,
-            descricao: eventoAtual.extendedProps.descricao
-          })
-        });
-
-        fecharModal();
-        abrirModalPrecificacao(eventoAtual.id)
-      }
-    }*/
 
     async function concluirAgendamento() {
       if (eventoAtual) {
@@ -635,30 +627,45 @@
 
     document
       .getElementById("form-agendamento")
-      .addEventListener("submit", function (e) {
+      .addEventListener("submit", async function (e) {
         e.preventDefault();
 
         const titulo = document.getElementById("titulo").value;
         const data = document.getElementById("data").value;
-        const cliente = document.getElementById("cliente").value;
-        const veiculo = document.getElementById("veiculo").value;
         const descricao = document.getElementById("descricao").value;
         const cor = document.getElementById("cor").value;
+        const clienteNome = document.getElementById("clienteNome").value;
+        const veiculoPlaca = document.getElementById("veiculoPlaca").value;
+        const veiculoModelo = document.getElementById("veiculoModelo").value;
 
         if (!modoEdicao) {
-          const novoEvento = {
+          const novoAgendamento = {
             title: titulo,
             start: data,
             backgroundColor: cor,
-            allDay: false,
-            extendedProps: {
-              cliente,
-              veiculo,
-              descricao
-            },
+            descricao: descricao,
+            clienteNome: clienteNome,
+            veiculoPlaca: veiculoPlaca,
+            veiculoModelo: veiculoModelo,
           };
-          calendar.addEvent(novoEvento);
-          salvarEventos(novoEvento);
+          try {
+            // 2. Esperamos a resposta do servidor
+            const response = await salvarEventos(novoAgendamento);
+
+            if (!response.ok) {
+              // Se o servidor retornar um erro, nós o exibimos
+              const erro = await response.json();
+              throw new Error(erro.error || "Falha ao salvar o evento.");
+            }
+
+            // 3. Se a resposta foi OK, mandamos o calendário recarregar!
+            calendar.refetchEvents();
+            fecharModal();
+
+          } catch (error) {
+            console.error("Erro ao salvar agendamento:", error);
+            alert(`Não foi possível criar o agendamento: ${error.message}`);
+          }
         }
         fecharModal();
       });
