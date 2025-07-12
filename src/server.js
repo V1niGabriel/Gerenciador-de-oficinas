@@ -27,7 +27,7 @@ router.get('/api/relatorios', controller.listarRelatorios);
 
 app.use(router);
 
-//Rotas evento.js
+//Rotas evento.js - Parte de Agendamento
 app.use('/api/agenda', eventoRotas(prisma));
 
 app.listen(PORT, () => {

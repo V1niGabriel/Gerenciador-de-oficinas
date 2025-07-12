@@ -33,7 +33,7 @@ export const finalizarAgendamento = async (req, res) => {
   const { serviceIds, partIds, extraCost, totalPrice } = req.body;
 
   try {
-    // Usamos uma transação para garantir que todas as operações funcionem ou nenhuma delas
+    //Transação para garantir que todas as operações funcionem ou nenhuma delas
     const result = await prisma.$transaction(async (tx) => {
       // 1. Criar o relatório
       const relatorio = await tx.report.create({
@@ -61,15 +61,18 @@ export const finalizarAgendamento = async (req, res) => {
             partId: partId,
           })),
         });
-        // Abater do estoque
-        for (const partId of partIds) {
-          await tx.parts.update({
+
+        // Cria um array de promessas de atualização, sem 'await'
+        const updatePromises = partIds.map(partId =>
+          tx.parts.update({
             where: { id: partId },
             data: { estoque: { decrement: 1 } },
-          });
-        }
+          })
+        );
+        // Executa todas as promessas em paralelo
+        await Promise.all(updatePromises);
       }
-
+      
       // 4. Atualizar o agendamento original como concluído
       const agendamentoAtual = await tx.agendamento.findUnique({ where: { id } });
       await tx.agendamento.update({
@@ -94,8 +97,8 @@ export const finalizarAgendamento = async (req, res) => {
 //Bloco dos relatórios
 export const listarRelatorios = async (req, res) => {
   try {
-    const { cliente, veiculo, servico, data, preco } = req.query;
-    
+    const { cliente, veiculo, titulo, data, preco } = req.query;
+
     const where = {};
 
     // Construção da busca com base nos filtros relacionais
@@ -107,7 +110,28 @@ export const listarRelatorios = async (req, res) => {
       // Filtra pela placa do veículo dentro da relação
       where.agendamento = { ...where.agendamento, veiculo: { placa: { contains: veiculo, mode: 'insensitive' } } };
     }
-    // ... outros filtros ...
+    if (titulo) {
+      //Busca pelo título dentro do agendamento
+      where.agendamento = {...where.agendamento, title: {contains: titulo, mode: 'insensitive'}}
+    }
+    if (data){
+      const dataInicio = new Date(data); //Ex: 2025-07-16T:00:00
+      const dataFim = new Date(data);
+      dataFim.setDate(dataFim.getDate() + 1); //EX: 2025-07-17T:00:00
+
+      where.data = {
+        gte: dataInicio, //gte = Maior ou igual ao valor digitado
+        lt: dataFim  //lt = menor que o inicio do próximo dia
+      };
+    }
+    if (preco){
+      const precoNumerico = parseFloat(preco);
+      if (!isNaN(precoNumerico)) {
+        where.preco = {
+          lte: precoNumerico //lte = Menor ou igual que
+        };
+      }
+    }
 
     const relatorios = await prisma.Report.findMany({
       where,

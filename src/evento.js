@@ -5,7 +5,6 @@ export default function (prisma) {
 
   // GET - Listar todos os eventos
   router.get('/', async (req, res) => {
-    // ... (código existente, sem alterações)
     try {
       const eventos = await prisma.Agendamento.findMany({
         include: {
@@ -22,7 +21,6 @@ export default function (prisma) {
 
   // POST - Criar novo evento
   router.post('/', async (req, res) => {
-    // ... (código existente, sem alterações)
     const { title, start, backgroundColor, descricao, clienteNome, veiculoPlaca, veiculoModelo } = req.body;
     
     if (!clienteNome || !veiculoPlaca) {
@@ -90,7 +88,9 @@ export default function (prisma) {
         // 2. Encontra ou cria o Veículo com a placa fornecida
         const veiculo = await tx.Vehicle.upsert({
           where: { placa: veiculoPlaca },
-          update: {},
+          update: {
+            modelo: veiculoModelo
+          },
           create: {
             placa: veiculoPlaca,
             modelo: veiculoModelo || 'Não informado',
@@ -128,7 +128,6 @@ export default function (prisma) {
 
   // DELETE - Excluir evento
   router.delete('/:id', async (req, res) => {
-    // ... (código existente, sem alterações)
     const { id } = req.params;
     try {
       await prisma.Agendamento.delete({
