@@ -43,7 +43,7 @@ document.getElementById('cadastro').addEventListener('submit', async function (e
   }
 
   try{
-    const responder = await fetch('http://localhost:3000/singUp', {
+    const responder = await fetch('https://gerenciador-de-oficinas.onrender.com/singUp', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -57,7 +57,7 @@ document.getElementById('cadastro').addEventListener('submit', async function (e
       console.log('Sucesso:', resultado.mensagem)
       showAlert("Cadastro Realizado")
       setTimeout(() => {
-        window.location.href = '../ladingpage/ladingpage.html';
+        window.location.href = '../home/home2.html';
       }, 1200);
     } else {
       console.log('Erro da API')
@@ -83,7 +83,7 @@ document.getElementById('Entrar').addEventListener('submit', async function (e) 
   }
 
   try{
-    const responder = await fetch('http://localhost:3000/SingIn', {
+    const responder = await fetch('https://gerenciador-de-oficinas.onrender.com/SingIn', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -96,7 +96,7 @@ document.getElementById('Entrar').addEventListener('submit', async function (e) 
     console.log(resultado)
 
     if(responder.ok) {
-     window.location.href = '../ladingpage/ladingpage.html'
+     window.location.href = '../home/home2.html'
     } 
     else {
       console.log('ERRO')

@@ -16,7 +16,7 @@ async function buscarRelatorios() {
   // Coleta valores dos filtros
   const cliente = document.getElementById('cliente').value;
   const veiculo = document.getElementById('veiculo').value;
-  const servico = document.getElementById('servico').value;
+  const servico = document.getElementById('titulo').value;
   const data = document.getElementById('data').value;
   const preco = document.getElementById('preco').value;
 
@@ -24,12 +24,12 @@ async function buscarRelatorios() {
   const params = new URLSearchParams();
   if (cliente) params.append('cliente', cliente);
   if (veiculo) params.append('veiculo', veiculo);
-  if (servico) params.append('servico', servico);
+  if (servico) params.append('titulo', servico);
   if (data) params.append('data', data);
   if (preco) params.append('preco', preco);
 
   try {
-    const response = await fetch(`http://localhost:3000/api/relatorios?${params.toString()}`);
+    const response = await fetch(`https://gerenciador-de-oficinas.onrender.com/api/relatorios?${params.toString()}`);
     if (!response.ok) {
       throw new Error(`Erro na rede: ${response.statusText}`);
     }
@@ -47,7 +47,7 @@ async function buscarRelatorios() {
     relatorios.forEach(r => {
       const card = document.createElement('div');
       card.className = 'report-card';
-      
+      console.log(r)
       // Acessa os dados aninhados de forma segura com o operador '?'
       const clienteNome = r.agendamento?.cliente?.nome || 'Cliente não informado';
       const veiculoPlaca = r.agendamento?.veiculo?.placa || 'N/A';
