@@ -13,8 +13,8 @@ const app = express()
 const PORT = process.env.PORT || 3000;
 
 //permite a requisição por solicitações externas. MIDDLEWARE 
-app.use(cors({ origin: 'http://127.0.0.1:5500' }))
-//app.use(cors({origin: 'https://v1nigabriel.github.io'}))
+//app.use(cors({ origin: 'http://127.0.0.1:5500' }))
+app.use(cors({origin: 'https://v1nigabriel.github.io'}))
 app.use(express.json())
 app.use(express.static(path.join(process.cwd(), 'public')))
 
