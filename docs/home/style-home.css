@@ -1,205 +1,269 @@
-   :root {
-      --preto: #050505;
-      --cinza: #747474;
-      --branco: #ffffff;
-      --vermelho: #c62828;
-      --azul: #355c7d;
-      --amarelo: #f9a825;
-    }
+:root {
+  --preto: #050505;
+  --cinza: #747474;
+  --branco: #ffffff;
+  --vermelho: #c62828;
+  --azul: #355c7d;
+  --amarelo: #f9a825;
+}
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: "Segoe UI", sans-serif;
-    }
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", sans-serif;
+}
 
-    body {
-      display: flex;
-      height: 100vh;
-      background-color: var(--branco);
-    }
+body {
+  display: flex;
+  height: 100vh;
+  background-color: var(--branco);
+}
 
-    .sidebar {
-      width: 250px;
-      background-color: var(--branco);
-      color: var(--preto);
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      padding: 20px;
-      border-right: 1px solid #ddd;
-    }
+.sidebar {
+  width: 250px;
+  background-color: var(--branco);
+  color: var(--preto);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 20px;
+  border-right: 1px solid #ddd;
+  transition: width 0.3s, transform 0.3s ease-in-out;
+}
 
-    .sidebar .logo {
-      text-align: center;
-      margin-bottom: 40px;
-    }
+.sidebar .logo {
+  text-align: center;
+  margin-bottom: 40px;
+}
 
-    .sidebar .logo img {
-      max-width: 120px;
-    }
+.sidebar .logo img {
+  max-width: 120px;
+}
 
-    .sidebar .menu a {
-      display: block;
-      color: var(--branco);
-      text-decoration: none;
-      padding: 12px;
-      border-radius: 12px;
-      margin-bottom: 10px;
-      background-color: var(--azul);
-      text-align: center;
-      transition: background 0.3s;
-    }
+.sidebar .menu a {
+  display: block;
+  color: var(--branco);
+  text-decoration: none;
+  padding: 12px;
+  border-radius: 12px;
+  margin-bottom: 10px;
+  background-color: var(--azul);
+  text-align: center;
+  transition: background 0.3s;
+}
 
-    .sidebar .menu a:hover {
-      background-color: var(--vermelho);
-    }
+.sidebar .menu a:hover {
+  background-color: var(--vermelho);
+}
 
-    .user-profile {
-      margin-top: 40px;
-      font-size: 14px;
-      text-align: center;
-      color: var(--branco);
-      padding: 11px;
-      border-radius: 12px;
-      margin-bottom: 10px;
-      background-color: var(--azul);
-    }
+.user-profile {
+  margin-top: 40px;
+  font-size: 14px;
+  text-align: center;
+  color: var(--branco);
+  padding: 11px;
+  border-radius: 12px;
+  margin-bottom: 10px;
+  background-color: var(--azul);
+}
 
-    .main-content {
-      flex: 1;
-      padding: 30px;
-      background-color: #f8f8f8;
-      overflow-y: auto;
-    }
+.main-content {
+  flex: 1;
+  padding: 30px;
+  background-color: #f8f8f8;
+  overflow-y: auto;
+}
 
-    .main-content h1 {
-      font-size: 24px;
-      margin-bottom: 20px;
-      color: var(--preto);
-    }
+.main-content h1 {
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: var(--preto);
+}
 
-    #calendar {
-      background-color: var(--branco);
-      padding: 20px;
-      border-radius: 12px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
-    }
+#calendar {
+  background-color: var(--branco);
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+}
 
-    .fc .fc-button-primary {
-      background-color: var(--azul);
-      border: none;
-    }
+.fc .fc-button-primary {
+  background-color: var(--azul);
+  border: none;
+}
 
-    .fc .fc-button-primary:hover {
-      background-color: var(--vermelho);
-    }
+.fc .fc-button-primary:hover {
+  background-color: var(--vermelho);
+}
 
-    .fc-daygrid-event {
-      background-color: var(--amarelo);
-      border: none;
-      color: var(--preto);
-      font-weight: bold;
-    }
+.fc-daygrid-event {
+  background-color: var(--amarelo);
+  border: none;
+  color: var(--preto);
+  font-weight: bold;
+}
 
-    #modal-agendar {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.4);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 999;
-    }
+#modal-agendar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
 
-    .modal-content {
-      background: #fff;
-      padding: 30px;
-      border-radius: 12px;
-      width: 400px;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-      position: relative;
-    }
+.modal-content {
+  background: #fff;
+  padding: 30px;
+  border-radius: 12px;
+  width: 400px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  position: relative;
+}
 
-    .modal-content h2 {
-      margin-bottom: 20px;
-      font-size: 20px;
-      color: var(--preto);
-    }
+.modal-content h2 {
+  margin-bottom: 20px;
+  font-size: 20px;
+  color: var(--preto);
+}
 
-    .modal-content label {
-      display: block;
-      margin-top: 10px;
-      font-weight: bold;
-    }
+.modal-content label {
+  display: block;
+  margin-top: 10px;
+  font-weight: bold;
+}
 
-    .modal-content input,
-    .modal-content textarea {
-      width: 100%;
-      padding: 8px;
-      margin-top: 5px;
-      border-radius: 8px;
-      border: 1px solid var(--cinza);
-    }
+.modal-content input,
+.modal-content textarea {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  border-radius: 8px;
+  border: 1px solid var(--cinza);
+}
 
-    .modal-content .botoes {
-      margin-top: 20px;
-      display: flex;
-      justify-content: space-between;
-    }
+.modal-content .botoes {
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  /* Alinha verticalmente para o layout de desktop */
+}
 
-    .modal-content button {
-      padding: 8px 16px;
-      border: none;
-      border-radius: 8px;
-      background-color: var(--azul);
-      color: white;
-      cursor: pointer;
-    }
+.modal-content button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  background-color: var(--azul);
+  color: white;
+  cursor: pointer;
+}
 
-    .modal-content button:hover {
-      background-color: var(--vermelho);
-    }
+.modal-content button:hover {
+  background-color: var(--vermelho);
+}
 
-    .close-btn {
-      position: absolute;
-      top: 10px;
-      right: 15px;
-      font-size: 24px;
-      cursor: pointer;
-      color: var(--preto);
-    }
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 24px;
+  cursor: pointer;
+  color: var(--preto);
+}
 
-    .items-container {
-      max-height: 150px;
-      overflow-y: auto;
-      border: 1px solid #eee;
-      padding: 10px;
-      border-radius: 8px;
-    }
+.items-container {
+  max-height: 150px;
+  overflow-y: auto;
+  border: 1px solid #eee;
+  padding: 10px;
+  border-radius: 8px;
+}
 
-    .items-container div {
-      display: flex;
-      justify-content: space-between;
-      padding: 5px;
-    }
+.items-container div {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px;
+}
 
-    .items-container label {
-      cursor: pointer;
-    }
+.items-container label {
+  cursor: pointer;
+}
 
-    fieldset {
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      padding: 10px;
-    }
+fieldset {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 10px;
+}
 
-    legend {
-      font-weight: bold;
-      padding: 0 5px;
-      color: var(--preto);
-    }
+legend {
+  font-weight: bold;
+  padding: 0 5px;
+  color: var(--preto);
+}
+
+/* --- ESTILOS PARA O MENU HAMBÚRGUER --- */
+.menu-toggle {
+  display: none;
+  position: fixed;
+  top: 15px;
+  left: 15px;
+  z-index: 1001;
+  background-color: var(--azul);
+  color: var(--branco);
+  border: none;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 24px;
+}
+
+.menu-toggle:hover {
+  background-color: var(--vermelho);
+}
+
+/* --- SEÇÃO RESPONSIVA --- */
+@media (max-width: 768px) {
+  .menu-toggle {
+    display: block;
+  }
+
+  .sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100%;
+    z-index: 1000;
+    transform: translateX(-100%);
+  }
+
+  .sidebar.is-visible {
+    transform: translateX(0);
+  }
+
+  .main-content {
+    padding-top: 70px;
+  }
+
+  .modal-content {
+    width: 90%;
+    max-width: 400px;
+  }
+
+  .modal-content .botoes {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 15px;
+  }
+
+  #modal-agendar {
+    align-items: flex-start;
+    overflow-y: auto;
+    padding: 6vh 0;
+  }
+}

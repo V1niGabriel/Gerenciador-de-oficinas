@@ -1,17 +1,19 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Home - MyCar Oficina</title>
   <link rel="shortcut icon" type="imagex/png" href="../assets/img/logo-Mycar.ico">
-  <link rel="stylesheet" href="style-home.css"/>
+  <link rel="stylesheet" href="style-home.css" />
 
   <!-- FullCalendar CSS -->
   <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.css" rel="stylesheet" />
 </head>
+
 <body>
-  <div class="sidebar">
+  <div class="sidebar" id="sidebar">
     <div>
       <div class="logo">
         <a href="../index.html">
@@ -31,6 +33,7 @@
   </div>
 
   <div class="main-content">
+    <button class="menu-toggle" aria-label="Abrir menu">☰</button>
     <h1>Calendário de Agendamentos</h1>
     <div id="calendar"></div>
   </div>

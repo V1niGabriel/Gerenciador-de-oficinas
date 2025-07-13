@@ -4,6 +4,16 @@ let modoEdicao = false;
 let agendamentoParaPrecificarId = null;
 let dadoComparacao = null;
 
+// Seleciona os elementos que vamos usar
+const menuToggle = document.querySelector('.menu-toggle');
+const sidebar = document.querySelector('.sidebar');
+
+// Adiciona um evento de clique ao botão
+menuToggle.addEventListener('click', () => {
+  // Adiciona ou remove a classe 'is-visible' na sidebar
+  sidebar.classList.toggle('is-visible');
+});
+
 // Função para carregar eventos 
 async function carregarEventos() {
   const resposta = await fetch('https://gerenciador-de-oficinas.onrender.com/api/agenda');
