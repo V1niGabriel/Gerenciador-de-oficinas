@@ -22,6 +22,7 @@ body {
   flex-direction: column;
   justify-content: space-between;
   padding: 20px 15px;
+  transition: width 0.3s, height 0.3s; /* Adiciona transição suave */
 }
 
 .logo {
@@ -141,4 +142,81 @@ body {
 
 .filtros button:hover {
   background-color: #294865;
+}
+
+/* Para tablets e telas menores (até 768px) */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column; /* Empilha a sidebar e o conteúdo principal */
+    }
+
+    .sidebar {
+        width: 100%;
+        height: auto;
+        flex-direction: row; /* Transforma a sidebar em um cabeçalho horizontal */
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px;
+        border-bottom: 2px solid #3a5a7d;
+    }
+
+    .logo {
+        margin-bottom: 0; /* Remove a margem inferior do logo */
+    }
+
+    .menu {
+        display: flex; /* Coloca os links do menu lado a lado */
+        gap: 10px;
+    }
+
+    .menu a {
+        margin: 0; /* Remove a margem vertical dos links */
+    }
+    
+    /* Oculta o card de usuário em telas menores para economizar espaço */
+    .user-info {
+        display: none; 
+    }
+
+    .content {
+        padding: 20px; /* Reduz o espaçamento do conteúdo */
+    }
+
+    .header {
+        flex-direction: column; /* Empilha o título e o botão */
+        align-items: flex-start;
+        gap: 15px;
+    }
+    
+    .report-list {
+        /* Ajusta o tamanho mínimo do card para caber melhor */
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    }
+}
+
+/* Para celulares (até 480px) */
+@media (max-width: 480px) {
+    .sidebar {
+        flex-direction: column; /* Empilha os itens do cabeçalho */
+        align-items: flex-start;
+        gap: 15px;
+    }
+    
+    .menu {
+        flex-direction: column; /* Empilha os links do menu verticalmente */
+        width: 100%;
+    }
+    
+    .filtros {
+        flex-direction: column; /* Empilha os campos de filtro */
+    }
+    
+    /* Faz os filtros e o botão ocuparem a largura total */
+    .filtros input, .filtros button {
+        width: 100%; 
+    }
+
+    .header h2 {
+        font-size: 20px; /* Reduz o tamanho do título */
+    }
 }
