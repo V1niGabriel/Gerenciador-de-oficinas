@@ -131,7 +131,7 @@ async function deletarServico(id) {
     carregarServicos();
   } catch (erro) {
     console.error('Erro ao excluir:', erro);
-    showAlert('Erro ao excluir serviço!', 'erro')
+    showAlert('Erro ao excluir serviço!', 'error')
   }
 }
 
