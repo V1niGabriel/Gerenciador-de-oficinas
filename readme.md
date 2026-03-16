@@ -99,3 +99,6 @@ Para instalação:
 package.json<br>
 README.md<br>
 
+## 🚀 Modelagem e Arquitetura do Projeto
+ - [Trello.com](https://trello.com/invite/b/689b1842b948440ef44475e6/ATTIa194c85751e7c3575fd80be8aa46dd31AFCBDE4D/gerenciador-de-oficina-projeto)
+
